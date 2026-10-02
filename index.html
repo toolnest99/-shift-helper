@@ -1,1804 +1,3073 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>알바 근무시간 정리기</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f6f7f9;
-      color: #222;
-    }
-    body.modal-open { overflow: hidden; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>알바 근무시간 정리기</title>
 
-    .wrap {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 18px;
-    }
+<style>
+*{box-sizing:border-box}
 
-    h1 { margin: 0 0 6px; font-size: 27px; }
-    h2 { margin: 0; font-size: 19px; }
-    .sub { color: #777; margin-bottom: 18px; font-size: 14px; }
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f6f7f9;
+  color:#222;
+}
 
-    .card {
-      background: #fff;
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 14px;
-      box-shadow: 0 3px 14px rgba(0,0,0,.05);
-    }
+body.modal-open{overflow:hidden}
 
-    details.card { padding: 0; overflow: hidden; }
-    details.card > summary {
-      list-style: none;
-      cursor: pointer;
-      padding: 16px;
-      font-weight: 800;
-    }
-    details.card > summary::-webkit-details-marker { display: none; }
-    details.card > summary::after {
-      content: "보기";
-      float: right;
-      font-size: 13px;
-      color: #777;
-      font-weight: 600;
-    }
-    details.card[open] > summary::after { content: "접기"; }
+.wrap{
+  max-width:760px;
+  margin:0 auto;
+  padding:18px;
+}
 
-    .details-body { padding: 0 16px 16px; }
+h1{margin:0 0 6px;font-size:27px}
+h2{margin:0;font-size:19px}
 
-    label {
-      display: block;
-      font-weight: 700;
-      margin: 12px 0 6px;
-      font-size: 14px;
-    }
+.sub{
+  color:#777;
+  margin-bottom:18px;
+  font-size:14px;
+}
 
-    input, select, button {
-      width: 100%;
-      padding: 11px 12px;
-      border-radius: 11px;
-      border: 1px solid #ddd;
-      font-size: 16px;
-      background: #fff;
-    }
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:0 3px 14px rgba(0,0,0,.05);
+}
 
-    button {
-      border: none;
-      background: #111;
-      color: #fff;
-      font-weight: 800;
-      margin-top: 12px;
-    }
+details.card{
+  padding:0;
+  overflow:hidden;
+}
 
-    .secondary { background: #eee; color: #222; }
-    .danger { background: #eee; color: #444; }
+details.card>summary{
+  list-style:none;
+  cursor:pointer;
+  padding:16px;
+  font-weight:800;
+}
 
-    .small-btn {
-      width: auto;
-      margin: 0;
-      padding: 8px 10px;
-      font-size: 13px;
-      border-radius: 9px;
-    }
+details.card>summary::-webkit-details-marker{
+  display:none;
+}
 
-    .row2, .filter-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
+details.card>summary::after{
+  content:"보기";
+  float:right;
+  font-size:13px;
+  color:#777;
+  font-weight:600;
+}
 
-    .employee-row {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      align-items: center;
-      margin-top: 8px;
-    }
+details.card[open]>summary::after{
+  content:"접기";
+}
 
-    .employee-name {
-      background: #f4f5f7;
-      padding: 10px 12px;
-      border-radius: 10px;
-    }
+.details-body{
+  padding:0 16px 16px;
+}
 
-    .calendar {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 7px;
-      margin-top: 10px;
-    }
+label{
+  display:block;
+  font-weight:700;
+  margin:12px 0 6px;
+  font-size:14px;
+}
 
-    .day-name {
-      text-align: center;
-      font-size: 12px;
-      font-weight: 700;
-      color: #777;
-      padding: 5px 0;
-    }
+input,select,button{
+  width:100%;
+  padding:11px 12px;
+  border-radius:11px;
+  border:1px solid #ddd;
+  font-size:16px;
+  background:#fff;
+}
 
-    .day {
-      aspect-ratio: 1 / 1;
-      padding: 0;
-      margin: 0;
-      border-radius: 10px;
-      border: 1px solid #ddd;
-      background: #fff;
-      color: #222;
-      font-weight: 700;
-    }
+button{
+  border:none;
+  background:#111;
+  color:#fff;
+  font-weight:800;
+  margin-top:12px;
+}
 
-    .day.selected {
-      background: #111;
-      color: #fff;
-      border-color: #111;
-    }
+.secondary{
+  background:#eee;
+  color:#222;
+}
 
-    .day.empty-day {
-      border: none;
-      background: transparent;
-      pointer-events: none;
-    }
+.danger{
+  background:#eee;
+  color:#444;
+}
 
-    .selected-count, .note {
-      font-size: 13px;
-      color: #777;
-      margin-top: 9px;
-      line-height: 1.5;
-    }
+.small-btn{
+  width:auto;
+  margin:0;
+  padding:8px 10px;
+  font-size:13px;
+  border-radius:9px;
+}
 
-    .generated-row {
-      background: #f7f7f8;
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 8px;
-    }
+.row2,.filter-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+}
 
-    .generated-title { font-weight: 800; margin-bottom: 6px; }
-    .generated-info { font-size: 13px; color: #777; margin-bottom: 6px; }
+.employee-row{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:center;
+  margin-top:8px;
+}
 
-    .summary-grid {
-      display: grid;
-      gap: 9px;
-      margin-top: 12px;
-    }
+.employee-name{
+  background:#f4f5f7;
+  padding:10px 12px;
+  border-radius:10px;
+}
 
-    .person-card {
-      background: #f4f5f7;
-      border-radius: 13px;
-      padding: 12px;
-    }
+.calendar{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:7px;
+  margin-top:10px;
+}
 
-    .person-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
+.day-name{
+  text-align:center;
+  font-size:12px;
+  font-weight:700;
+  color:#777;
+  padding:5px 0;
+}
 
-    .person-name { font-weight: 900; }
-    .person-total { font-size: 13px; color: #666; margin-top: 4px; }
+.day{
+  aspect-ratio:1/1;
+  padding:0;
+  margin:0;
+  border-radius:10px;
+  border:1px solid #ddd;
+  background:#fff;
+  color:#222;
+  font-weight:700;
+}
 
-    .record-list {
-      display: none;
-      margin-top: 10px;
-    }
+.day.selected{
+  background:#111;
+  color:#fff;
+  border-color:#111;
+}
 
-    .record-list.open { display: block; }
+.day.empty-day{
+  border:none;
+  background:transparent;
+  pointer-events:none;
+}
 
-    .record {
-      background: #fff;
-      border-radius: 11px;
-      padding: 10px;
-      margin-top: 7px;
-      border: 1px solid #e8e8e8;
-    }
+.selected-count,.note{
+  font-size:13px;
+  color:#777;
+  margin-top:9px;
+  line-height:1.5;
+}
 
-    .record-date { font-weight: 800; }
+.generated-row{
+  background:#f7f7f8;
+  border-radius:12px;
+  padding:12px;
+  margin-top:8px;
+}
 
-    .record-meta {
-      font-size: 13px;
-      color: #666;
-      margin-top: 3px;
-      line-height: 1.45;
-    }
+.generated-title{
+  font-weight:800;
+  margin-bottom:6px;
+}
 
-    .record-actions {
-      display: flex;
-      gap: 6px;
-      margin-top: 9px;
-    }
+.generated-info{
+  font-size:13px;
+  color:#777;
+  margin-bottom:6px;
+}
 
-    .record-actions button { flex: 1; }
+.summary-grid{
+  display:grid;
+  gap:9px;
+  margin-top:12px;
+}
 
-    .edit-box {
-      display: none;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px solid #eee;
-    }
+.person-card{
+  background:#f4f5f7;
+  border-radius:13px;
+  padding:12px;
+}
 
-    .edit-box.open { display: block; }
+.person-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
 
-    .empty {
-      color: #999;
-      text-align: center;
-      padding: 12px 0;
-      font-size: 14px;
-    }
+.person-name{
+  font-weight:900;
+}
 
-    .schedule-launch {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
+.person-total{
+  font-size:13px;
+  color:#666;
+  margin-top:4px;
+}
 
-    .schedule-launch button {
-      width: auto;
-      margin: 0;
-      padding: 10px 14px;
-    }
+.record-list{
+  display:none;
+  margin-top:10px;
+}
 
-    .schedule-modal {
-      position: fixed;
-      inset: 0;
-      background: #f6f7f9;
-      z-index: 9999;
-      display: none;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-    }
+.record-list.open{
+  display:block;
+}
 
-    .schedule-modal.open { display: block; }
+.record{
+  background:#fff;
+  border-radius:11px;
+  padding:10px;
+  margin-top:7px;
+  border:1px solid #e8e8e8;
+}
 
-    .schedule-modal-inner {
-      max-width: 760px;
-      margin: 0 auto;
-      padding: 16px;
-      min-height: 100vh;
-    }
+.record-date{
+  font-weight:800;
+}
 
-    .schedule-modal-top {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: rgba(246,247,249,.96);
-      backdrop-filter: blur(12px);
-      padding: 8px 0 12px;
-      margin-bottom: 8px;
-    }
+.record-meta{
+  font-size:13px;
+  color:#666;
+  margin-top:3px;
+  line-height:1.45;
+}
 
-    .schedule-modal-title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
+.record-actions{
+  display:flex;
+  gap:6px;
+  margin-top:9px;
+}
 
-    .schedule-modal-title h2 { font-size: 24px; }
+.record-actions button{
+  flex:1;
+}
 
-    .close-schedule {
-      width: auto;
-      margin: 0;
-      background: #111;
-      padding: 10px 14px;
-      border-radius: 999px;
-    }
+.edit-box{
+  display:none;
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid #eee;
+}
 
-    .schedule-calendar {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 8px;
-      margin-top: 16px;
-    }
+.edit-box.open{
+  display:block;
+}
 
-    .schedule-weekday {
-      text-align: center;
-      font-size: 12px;
-      color: #777;
-      font-weight: 700;
-      padding: 4px 0;
-    }
+.empty{
+  color:#999;
+  text-align:center;
+  padding:12px 0;
+  font-size:14px;
+}
 
-    .schedule-day {
-      min-height: 120px;
-      background: #fff;
-      border: 1px solid #ececec;
-      box-shadow: 0 2px 8px rgba(0,0,0,.04);
-      border-radius: 10px;
-      padding: 6px;
-      font-size: 12px;
-    }
+.schedule-launch{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
 
-    .schedule-day.empty {
-      background: transparent;
-      border: none;
-      box-shadow: none;
-    }
+.schedule-launch button{
+  width:auto;
+  margin:0;
+  padding:10px 14px;
+}
 
-    .schedule-date {
-      font-weight: 900;
-      margin-bottom: 5px;
-    }
+.schedule-modal{
+  position:fixed;
+  inset:0;
+  background:#f6f7f9;
+  z-index:9999;
+  display:none;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
 
-    .shift-line {
-      background: #f7f7f8;
-      border-radius: 7px;
-      padding: 5px 6px;
-      margin-top: 4px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      text-align: left;
-      white-space: nowrap;
-      overflow: hidden;
-      border: 1px solid #f0f0f0;
-    }
+.schedule-modal.open{
+  display:block;
+}
 
-    .shift-position {
-      font-weight: 800;
-      flex: 0 0 auto;
-    }
+.schedule-modal-inner{
+  max-width:760px;
+  margin:0 auto;
+  padding:16px;
+  min-height:100vh;
+}
 
-    .shift-name {
-      font-weight: 400;
-      color: #444;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      min-width: 0;
-    }
+.schedule-modal-top{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:rgba(246,247,249,.96);
+  backdrop-filter:blur(12px);
+  padding:8px 0 12px;
+  margin-bottom:8px;
+}
 
-    @media (max-width: 520px) {
-      .schedule-modal-inner { padding: 12px; }
-      .schedule-calendar { gap: 5px; }
-      .schedule-day { min-height: 108px; padding: 6px; }
-      .shift-line { font-size: 11px; gap: 3px; padding: 4px 5px; }
-      .schedule-date { font-size: 12px; }
-    }
-  </style>
+.schedule-modal-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+
+.schedule-modal-title h2{
+  font-size:24px;
+}
+
+.modal-actions{
+  display:flex;
+  gap:7px;
+}
+
+.image-save{
+  width:auto;
+  margin:0;
+  background:#fff;
+  color:#111;
+  border:1px solid #ddd;
+  padding:10px 13px;
+  border-radius:999px;
+}
+
+.close-schedule{
+  width:auto;
+  margin:0;
+  background:#111;
+  padding:10px 14px;
+  border-radius:999px;
+}
+
+.schedule-calendar{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:8px;
+  margin-top:16px;
+}
+
+.schedule-weekday{
+  text-align:center;
+  font-size:12px;
+  color:#777;
+  font-weight:700;
+  padding:4px 0;
+}
+
+.schedule-day{
+  min-height:120px;
+  background:#fff;
+  border:1px solid #ececec;
+  box-shadow:0 2px 8px rgba(0,0,0,.04);
+  border-radius:10px;
+  padding:6px;
+  font-size:12px;
+}
+
+.schedule-day.empty{
+  background:transparent;
+  border:none;
+  box-shadow:none;
+}
+
+.schedule-date{
+  font-weight:900;
+  margin-bottom:5px;
+}
+
+.shift-line{
+  background:#f7f7f8;
+  border-radius:7px;
+  padding:5px 6px;
+  margin-top:4px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  text-align:left;
+  white-space:nowrap;
+  overflow:hidden;
+  border:1px solid #f0f0f0;
+}
+
+.shift-position{
+  font-weight:800;
+  flex:0 0 auto;
+}
+
+.shift-name{
+  font-weight:400;
+  color:#444;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  min-width:0;
+}
+
+@media(max-width:520px){
+  .schedule-modal-inner{padding:12px}
+  .schedule-calendar{gap:5px}
+  .schedule-day{min-height:108px;padding:6px}
+  .shift-line{font-size:11px;gap:3px;padding:4px 5px}
+  .schedule-date{font-size:12px}
+  .image-save,.close-schedule{
+    padding:9px 11px;
+    font-size:13px;
+  }
+}
+</style>
 </head>
 
 <body>
 
 <div class="wrap">
 
-  <h1>알바 근무시간 정리기</h1>
-  <div class="sub">
-    원하는 날짜만 골라 기록하고, 저장한 뒤에도 포지션과 출퇴근시간을 수정할 수 있어요.
-  </div>
+<h1>알바 근무시간 정리기</h1>
 
-  <details class="card">
-    <summary>직원 관리</summary>
-    <div class="details-body">
-      <label>직원 이름</label>
-      <input id="newEmployee" type="text" placeholder="예: 서윤">
-      <button onclick="addEmployee()">직원 추가</button>
-      <div id="employeeList" style="margin-top:12px;"></div>
-    </div>
-  </details>
+<div class="sub">
+원하는 날짜만 골라 기록하고, 저장한 뒤에도 포지션과 출퇴근시간을 수정할 수 있어요.
+</div>
 
-  <div class="card">
+<details class="card">
 
-    <h2>근무일 입력</h2>
+<summary>직원 관리</summary>
 
-    <label>직원</label>
-    <select id="employeeSelect">
-      <option value="">직원을 선택하세요</option>
-    </select>
+<div class="details-body">
 
-    <label>포지션</label>
-    <select id="position">
-      <option value="오픈">오픈</option>
-      <option value="오전미들">오전미들</option>
-      <option value="오후미들">오후미들</option>
-      <option value="미들">미들</option>
-      <option value="마감">마감</option>
-      <option value="교육">교육</option>
-    </select>
+<label>직원 이름</label>
 
-    <label>월 선택</label>
-    <input id="monthPicker" type="month">
+<input
+id="newEmployee"
+type="text"
+placeholder="예: 서윤"
+>
 
-    <div id="calendarWrap"></div>
-    <div id="selectedCount" class="selected-count">
-      선택된 날짜 0일
-    </div>
+<button onclick="addEmployee()">
+직원 추가
+</button>
 
-    <div class="row2">
-      <div>
-        <label>기본 출근</label>
-        <input id="defaultStart" type="time">
-      </div>
-
-      <div>
-        <label>기본 퇴근</label>
-        <input id="defaultEnd" type="time">
-      </div>
-    </div>
-
-    <button onclick="makeSelectedDates()">
-      선택한 날짜 확인
-    </button>
-
-  </div>
-
-  <details id="generatedCard" class="card" style="display:none;" open>
-    <summary>저장 전 퇴근시간 확인/수정</summary>
-
-    <div class="details-body">
-      <div class="note">
-        기본 퇴근시간과 다른 날만 수정한 뒤 한 번에 저장하면 돼요.
-      </div>
-
-      <div id="generatedList"></div>
-
-      <button onclick="saveGeneratedWorks()">
-        전체 근무 기록 저장
-      </button>
-    </div>
-  </details>
-
-  <div class="card">
-
-    <h2>근무기록</h2>
-
-    <div class="filter-row" style="margin-top:12px;">
-      <input id="monthFilter" type="month">
-      <button class="secondary" style="margin:0;" onclick="clearFilter()">
-        전체 보기
-      </button>
-    </div>
-
-    <div id="summary" class="summary-grid">
-      <div class="empty">
-        아직 기록이 없어요.
-      </div>
-    </div>
-
-  </div>
-
-  <div class="card">
-    <div class="schedule-launch">
-      <div>
-        <h2>월간 스케줄 달력</h2>
-        <div class="note">
-          저장된 근무기록을 달력으로 크게 봐요.
-        </div>
-      </div>
-
-      <button onclick="openScheduleModal()">
-        달력 보기
-      </button>
-    </div>
-  </div>
+<div
+id="employeeList"
+style="margin-top:12px;"
+></div>
 
 </div>
 
-<div id="scheduleModal" class="schedule-modal">
+</details>
 
-  <div class="schedule-modal-inner">
 
-    <div class="schedule-modal-top">
+<div class="card">
 
-      <div class="schedule-modal-title">
-        <h2>월간 스케줄</h2>
+<h2>근무일 입력</h2>
 
-        <button class="close-schedule" onclick="closeScheduleModal()">
-          닫기
-        </button>
-      </div>
+<label>직원</label>
 
-      <input
-        id="scheduleMonth"
-        type="month"
-        onchange="renderScheduleCalendar()"
-      >
+<select id="employeeSelect">
+<option value="">
+직원을 선택하세요
+</option>
+</select>
 
-    </div>
 
-    <div id="scheduleCalendar"></div>
+<label>포지션</label>
 
-  </div>
+<select id="position">
+<option value="오픈">오픈</option>
+<option value="오전미들">오전미들</option>
+<option value="오후미들">오후미들</option>
+<option value="미들">미들</option>
+<option value="마감">마감</option>
+<option value="교육">교육</option>
+</select>
+
+
+<label>월 선택</label>
+
+<input
+id="monthPicker"
+type="month"
+>
+
+
+<div id="calendarWrap"></div>
+
+<div
+id="selectedCount"
+class="selected-count"
+>
+선택된 날짜 0일
+</div>
+
+
+<div class="row2">
+
+<div>
+
+<label>기본 출근</label>
+
+<input
+id="defaultStart"
+type="time"
+>
 
 </div>
+
+
+<div>
+
+<label>기본 퇴근</label>
+
+<input
+id="defaultEnd"
+type="time"
+>
+
+</div>
+
+</div>
+
+
+<button onclick="makeSelectedDates()">
+선택한 날짜 확인
+</button>
+
+</div>
+
+
+<details
+id="generatedCard"
+class="card"
+style="display:none;"
+open
+>
+
+<summary>
+저장 전 퇴근시간 확인/수정
+</summary>
+
+<div class="details-body">
+
+<div class="note">
+기본 퇴근시간과 다른 날만 수정한 뒤 한 번에 저장하면 돼요.
+</div>
+
+<div id="generatedList"></div>
+
+<button onclick="saveGeneratedWorks()">
+전체 근무 기록 저장
+</button>
+
+</div>
+
+</details>
+
+
+<div class="card">
+
+<h2>근무기록</h2>
+
+<div
+class="filter-row"
+style="margin-top:12px;"
+>
+
+<input
+id="monthFilter"
+type="month"
+>
+
+<button
+class="secondary"
+style="margin:0;"
+onclick="clearFilter()"
+>
+전체 보기
+</button>
+
+</div>
+
+
+<div
+id="summary"
+class="summary-grid"
+>
+
+<div class="empty">
+아직 기록이 없어요.
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="schedule-launch">
+
+<div>
+
+<h2>월간 스케줄 달력</h2>
+
+<div class="note">
+저장된 근무기록을 달력으로 크게 봐요.
+</div>
+
+</div>
+
+
+<button onclick="openScheduleModal()">
+달력 보기
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div
+id="scheduleModal"
+class="schedule-modal"
+>
+
+<div class="schedule-modal-inner">
+
+<div class="schedule-modal-top">
+
+<div class="schedule-modal-title">
+
+<h2>월간 스케줄</h2>
+
+<div class="modal-actions">
+
+<button
+class="image-save"
+onclick="saveScheduleImage()"
+>
+이미지 저장
+</button>
+
+<button
+class="close-schedule"
+onclick="closeScheduleModal()"
+>
+닫기
+</button>
+
+</div>
+
+</div>
+
+
+<input
+id="scheduleMonth"
+type="month"
+>
+
+</div>
+
+
+<div id="scheduleCalendar"></div>
+
+</div>
+
+</div>
+
 
 <script>
 
-  let employees =
-    JSON.parse(localStorage.getItem("employees") || "[]");
-
-  let works =
-    JSON.parse(localStorage.getItem("works") || "[]");
-
-  let settings =
-    JSON.parse(
-      localStorage.getItem("shiftHelperSettings")
-      ||
-      localStorage.getItem("shiftSettings")
-      ||
-      "{}"
-    );
-
-  let selectedDates = [];
-  let generatedWorks = [];
-
-  const positions = [
-    "오픈",
-    "오전미들",
-    "오후미들",
-    "미들",
-    "마감",
-    "교육"
-  ];
-
-  function saveEmployees() {
-    localStorage.setItem(
-      "employees",
-      JSON.stringify(employees)
-    );
-  }
-
-  function saveWorks() {
-    localStorage.setItem(
-      "works",
-      JSON.stringify(works)
-    );
-  }
-
-  function saveSettings() {
-    const ids = [
-      "employeeSelect",
-      "position",
-      "monthPicker",
-      "defaultStart",
-      "defaultEnd",
-      "monthFilter",
-      "scheduleMonth"
-    ];
-
-    ids.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) settings[id] = el.value;
-    });
-
-    localStorage.setItem(
-      "shiftHelperSettings",
-      JSON.stringify(settings)
-    );
-
-    localStorage.setItem(
-      "shiftSettings",
-      JSON.stringify(settings)
-    );
-  }
-
-  function restoreSettings() {
-    const ids = [
-      "position",
-      "monthPicker",
-      "defaultStart",
-      "defaultEnd",
-      "monthFilter",
-      "scheduleMonth"
-    ];
-
-    ids.forEach(id => {
-      const el = document.getElementById(id);
-
-      if (
-        el &&
-        settings[id] !== undefined
-      ) {
-        el.value = settings[id];
-      }
-    });
-  }
-
-  function addEmployee() {
-
-    const input =
-      document.getElementById("newEmployee");
-
-    const name =
-      input.value.trim();
-
-    if (!name) {
-      alert("직원 이름을 입력해줘!");
-      return;
-    }
+/* =========================
+   기존 저장 데이터 그대로
+========================= */
 
-    if (employees.includes(name)) {
-      alert("이미 등록된 직원이에요.");
-      return;
-    }
+let employees =
+JSON.parse(
+localStorage.getItem("employees")
+||
+"[]"
+);
 
-    employees.push(name);
+let works =
+JSON.parse(
+localStorage.getItem("works")
+||
+"[]"
+);
 
-    saveEmployees();
+let settings =
+JSON.parse(
+localStorage.getItem("shiftHelperSettings")
+||
+localStorage.getItem("shiftSettings")
+||
+"{}"
+);
 
-    input.value = "";
 
-    renderEmployees();
-  }
+let selectedDates=[];
+let generatedWorks=[];
 
-  function deleteEmployee(name) {
 
-    if (
-      !confirm(
-        `${name} 직원을 목록에서 삭제할까요?\n기존 근무 기록은 그대로 남아요.`
-      )
-    ) {
-      return;
-    }
+const positions=[
+"오픈",
+"오전미들",
+"오후미들",
+"미들",
+"마감",
+"교육"
+];
 
-    employees =
-      employees.filter(
-        item => item !== name
-      );
 
-    saveEmployees();
+/* =========================
+   저장
+========================= */
 
-    renderEmployees();
-  }
+function saveEmployees(){
 
-  function renderEmployees() {
+localStorage.setItem(
+"employees",
+JSON.stringify(employees)
+);
 
-    const list =
-      document.getElementById("employeeList");
+}
 
-    const select =
-      document.getElementById("employeeSelect");
 
-    list.innerHTML = "";
+function saveWorks(){
 
-    select.innerHTML =
-      `<option value="">직원을 선택하세요</option>`;
+localStorage.setItem(
+"works",
+JSON.stringify(works)
+);
 
-    if (employees.length === 0) {
-      list.innerHTML =
-        `<div class="empty">직원을 먼저 추가해주세요.</div>`;
-    }
+}
 
-    employees.forEach(name => {
 
-      const row =
-        document.createElement("div");
+function saveSettings(){
 
-      row.className =
-        "employee-row";
+const ids=[
+"employeeSelect",
+"position",
+"monthPicker",
+"defaultStart",
+"defaultEnd",
+"monthFilter",
+"scheduleMonth"
+];
 
-      row.innerHTML = `
-        <div class="employee-name">
-          ${escapeHtml(name)}
-        </div>
-
-        <button
-          class="small-btn danger"
-          onclick='deleteEmployee(${JSON.stringify(name)})'
-        >
-          삭제
-        </button>
-      `;
 
-      list.appendChild(row);
+ids.forEach(id=>{
 
-      const option =
-        document.createElement("option");
+const el=
+document.getElementById(id);
 
-      option.value = name;
-      option.textContent = name;
+if(el){
+settings[id]=el.value;
+}
 
-      select.appendChild(option);
-    });
+});
 
-    if (
-      settings.employeeSelect &&
-      employees.includes(settings.employeeSelect)
-    ) {
-      select.value =
-        settings.employeeSelect;
-    }
-  }
-
-  function buildCalendar() {
-
-    const monthValue =
-      document.getElementById("monthPicker").value;
 
-    const wrap =
-      document.getElementById("calendarWrap");
+localStorage.setItem(
+"shiftHelperSettings",
+JSON.stringify(settings)
+);
 
-    selectedDates = [];
-
-    updateSelectedCount();
+localStorage.setItem(
+"shiftSettings",
+JSON.stringify(settings)
+);
 
-    if (!monthValue) {
-      wrap.innerHTML = "";
-      return;
-    }
+}
 
-    const [year, month] =
-      monthValue.split("-").map(Number);
 
-    const firstDay =
-      new Date(year, month - 1, 1).getDay();
+function restoreSettings(){
 
-    const lastDate =
-      new Date(year, month, 0).getDate();
+const ids=[
+"position",
+"monthPicker",
+"defaultStart",
+"defaultEnd",
+"monthFilter",
+"scheduleMonth"
+];
 
-    let html = `
-      <div class="calendar">
 
-        <div class="day-name">일</div>
-        <div class="day-name">월</div>
-        <div class="day-name">화</div>
-        <div class="day-name">수</div>
-        <div class="day-name">목</div>
-        <div class="day-name">금</div>
-        <div class="day-name">토</div>
-    `;
+ids.forEach(id=>{
 
-    for (
-      let i = 0;
-      i < firstDay;
-      i++
-    ) {
-      html += `
-        <button
-          class="day empty-day"
-          type="button"
-        ></button>
-      `;
-    }
+const el=
+document.getElementById(id);
 
-    for (
-      let day = 1;
-      day <= lastDate;
-      day++
-    ) {
+if(
+el
+&&
+settings[id]!==undefined
+){
 
-      const dateString =
-        `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-
-      html += `
-        <button
-          type="button"
-          class="day"
-          id="day-${day}"
-          onclick="toggleDate('${dateString}', ${day})"
-        >
-          ${day}
-        </button>
-      `;
-    }
-
-    html += `</div>`;
-
-    wrap.innerHTML = html;
-
-    saveSettings();
-  }
-
-  function toggleDate(
-    dateString,
-    day
-  ) {
-
-    const btn =
-      document.getElementById(
-        `day-${day}`
-      );
-
-    if (
-      selectedDates.includes(
-        dateString
-      )
-    ) {
-
-      selectedDates =
-        selectedDates.filter(
-          d => d !== dateString
-        );
-
-      btn.classList.remove(
-        "selected"
-      );
-
-    } else {
-
-      selectedDates.push(
-        dateString
-      );
-
-      selectedDates.sort();
-
-      btn.classList.add(
-        "selected"
-      );
-    }
-
-    updateSelectedCount();
-  }
-
-  function updateSelectedCount() {
-
-    document.getElementById(
-      "selectedCount"
-    ).textContent =
-      `선택된 날짜 ${selectedDates.length}일`;
-  }
-
-  function makeSelectedDates() {
-
-    const employee =
-      document.getElementById(
-        "employeeSelect"
-      ).value;
-
-    const position =
-      document.getElementById(
-        "position"
-      ).value;
-
-    const defaultStart =
-      document.getElementById(
-        "defaultStart"
-      ).value;
-
-    const defaultEnd =
-      document.getElementById(
-        "defaultEnd"
-      ).value;
-
-    if (!employee) {
-      alert("직원을 선택해줘!");
-      return;
-    }
-
-    if (
-      selectedDates.length === 0
-    ) {
-      alert("달력에서 근무 날짜를 선택해줘!");
-      return;
-    }
-
-    if (
-      !defaultStart ||
-      !defaultEnd
-    ) {
-      alert("기본 출근시간과 퇴근시간을 입력해줘!");
-      return;
-    }
-
-    generatedWorks =
-      selectedDates.map(
-        date => ({
-          date,
-          employee,
-          position,
-          start: defaultStart,
-          end: defaultEnd
-        })
-      );
-
-    saveSettings();
-
-    renderGenerated();
-  }
-
-  function renderGenerated() {
-
-    const card =
-      document.getElementById("generatedCard");
-
-    const list =
-      document.getElementById("generatedList");
-
-    card.style.display = "block";
-    card.open = true;
-
-    list.innerHTML = "";
-
-    generatedWorks.forEach(
-      (item, index) => {
-
-        const row =
-          document.createElement("div");
-
-        row.className =
-          "generated-row";
-
-        row.innerHTML = `
-          <div class="generated-title">
-            ${formatDate(item.date)}
-          </div>
-
-          <div class="generated-info">
-            ${escapeHtml(item.employee)}
-            ·
-            ${escapeHtml(item.position)}
-            ·
-            출근 ${item.start}
-          </div>
-
-          <input
-            type="time"
-            value="${item.end}"
-            onchange="changeGeneratedEnd(${index}, this.value)"
-          >
-        `;
-
-        list.appendChild(row);
-      }
-    );
-  }
-
-  function changeGeneratedEnd(
-    index,
-    value
-  ) {
-    generatedWorks[index].end =
-      value;
-  }
-
-  function saveGeneratedWorks() {
-
-    if (
-      generatedWorks.length === 0
-    ) {
-      alert("먼저 날짜를 만들어줘!");
-      return;
-    }
-
-    generatedWorks.forEach(item => {
-
-      works.push({
-        id:
-          Date.now()
-          +
-          Math.floor(
-            Math.random() * 100000
-          ),
-
-        name:
-          item.employee,
-
-        date:
-          item.date,
-
-        position:
-          item.position,
-
-        start:
-          item.start,
-
-        end:
-          item.end,
-
-        total:
-          calculateWorkMinutes(
-            item.start,
-            item.end
-          )
-      });
-    });
-
-    saveWorks();
-
-    generatedWorks = [];
-
-    document.getElementById(
-      "generatedCard"
-    ).style.display =
-      "none";
-
-    alert(
-      "근무 기록이 저장됐어요!"
-    );
-
-    renderWorks();
-
-    renderScheduleCalendar();
-  }
-
-  function calculateWorkMinutes(
-    start,
-    end
-  ) {
-
-    const [sh, sm] =
-      start.split(":").map(Number);
-
-    const [eh, em] =
-      end.split(":").map(Number);
-
-    let startMin =
-      sh * 60 + sm;
-
-    let endMin =
-      eh * 60 + em;
-
-    if (
-      endMin < startMin
-    ) {
-      endMin += 1440;
-    }
-
-    return (
-      endMin - startMin
-    );
-  }
-
-  function updateRecord(id) {
-
-    const startInput =
-      document.getElementById(
-        `edit-start-${id}`
-      );
-
-    const endInput =
-      document.getElementById(
-        `edit-end-${id}`
-      );
-
-    const positionInput =
-      document.getElementById(
-        `edit-position-${id}`
-      );
-
-    if (
-      !startInput ||
-      !startInput.value
-    ) {
-      alert("출근시간을 입력해줘!");
-      return;
-    }
-
-    if (
-      !endInput ||
-      !endInput.value
-    ) {
-      alert("퇴근시간을 입력해줘!");
-      return;
-    }
-
-    const item =
-      works.find(
-        w =>
-          String(w.id)
-          ===
-          String(id)
-      );
-
-    if (!item) {
-      return;
-    }
-
-    item.start =
-      startInput.value;
-
-    item.end =
-      endInput.value;
-
-    item.position =
-      positionInput.value;
-
-    item.total =
-      calculateWorkMinutes(
-        item.start,
-        item.end
-      );
-
-    saveWorks();
-
-    renderWorks();
-
-    renderScheduleCalendar();
-
-    alert(
-      "근무기록이 수정됐어요!"
-    );
-  }
-
-  function toggleEdit(id) {
-
-    const box =
-      document.getElementById(
-        `edit-box-${id}`
-      );
-
-    if (box) {
-      box.classList.toggle(
-        "open"
-      );
-    }
-  }
-
-  function togglePerson(
-    nameKey
-  ) {
-
-    const box =
-      document.getElementById(
-        `records-${nameKey}`
-      );
-
-    if (box) {
-      box.classList.toggle(
-        "open"
-      );
-    }
-  }
-
-  function deleteWork(id) {
-
-    if (
-      !confirm(
-        "이 근무 기록을 삭제할까요?"
-      )
-    ) {
-      return;
-    }
-
-    works =
-      works.filter(
-        item =>
-          String(item.id)
-          !==
-          String(id)
-      );
-
-    saveWorks();
-
-    renderWorks();
-
-    renderScheduleCalendar();
-  }
-
-  function clearFilter() {
-
-    document.getElementById(
-      "monthFilter"
-    ).value = "";
-
-    saveSettings();
-
-    renderWorks();
-  }
-
-  function renderWorks() {
-
-    const summary =
-      document.getElementById(
-        "summary"
-      );
-
-    const monthFilter =
-      document.getElementById(
-        "monthFilter"
-      ).value;
-
-    let filtered =
-      [...works];
-
-    if (monthFilter) {
-
-      filtered =
-        filtered.filter(
-          item =>
-            item.date.startsWith(
-              monthFilter
-            )
-        );
-    }
-
-    filtered.sort(
-      (a,b) =>
-        a.date.localeCompare(
-          b.date
-        )
-    );
-
-    if (
-      filtered.length === 0
-    ) {
-
-      summary.innerHTML = `
-        <div class="empty">
-          아직 기록이 없어요.
-        </div>
-      `;
-
-      return;
-    }
-
-    const grouped = {};
-
-    filtered.forEach(item => {
-
-      if (
-        !grouped[item.name]
-      ) {
-
-        grouped[item.name] = {
-          total: 0,
-          items: []
-        };
-      }
-
-      grouped[item.name].total +=
-        Number(
-          item.total || 0
-        );
-
-      grouped[item.name].items.push(
-        item
-      );
-    });
-
-    summary.innerHTML = "";
-
-    Object.keys(grouped)
-      .sort()
-      .forEach(
-        (name, idx) => {
-
-          const group =
-            grouped[name];
-
-          const nameKey =
-            `p${idx}`;
-
-          const person =
-            document.createElement(
-              "div"
-            );
-
-          person.className =
-            "person-card";
-
-          const recordsHtml =
-            group.items.map(
-              item => {
-
-                const positionOptions =
-                  positions.map(
-                    p =>
-                      `<option value="${p}" ${item.position === p ? "selected" : ""}>${p}</option>`
-                  ).join("");
-
-                return `
-                  <div class="record">
-
-                    <div class="record-date">
-                      ${formatDate(item.date)}
-                    </div>
-
-                    <div class="record-meta">
-                      ${escapeHtml(item.position || "-")}
-                      ·
-                      ${item.start}
-                      →
-                      ${item.end}
-
-                      <br>
-
-                      ${formatMinutes(item.total)}
-                    </div>
-
-                    <div class="record-actions">
-
-                      <button
-                        class="small-btn secondary"
-                        onclick="toggleEdit(${item.id})"
-                      >
-                        기록 수정
-                      </button>
-
-                      <button
-                        class="small-btn danger"
-                        onclick="deleteWork(${item.id})"
-                      >
-                        삭제
-                      </button>
-
-                    </div>
-
-                    <div
-                      class="edit-box"
-                      id="edit-box-${item.id}"
-                    >
-
-                      <label>
-                        포지션
-                      </label>
-
-                      <select
-                        id="edit-position-${item.id}"
-                      >
-                        ${positionOptions}
-                      </select>
-
-                      <label>
-                        출근시간
-                      </label>
-
-                      <input
-                        id="edit-start-${item.id}"
-                        type="time"
-                        value="${item.start}"
-                      >
-
-                      <label>
-                        퇴근시간
-                      </label>
-
-                      <input
-                        id="edit-end-${item.id}"
-                        type="time"
-                        value="${item.end}"
-                      >
-
-                      <button
-                        onclick="updateRecord(${item.id})"
-                      >
-                        수정 저장
-                      </button>
-
-                    </div>
-
-                  </div>
-                `;
-              }
-            ).join("");
-
-          person.innerHTML = `
-            <div class="person-top">
-
-              <div>
-
-                <div class="person-name">
-                  ${escapeHtml(name)}
-                </div>
-
-                <div class="person-total">
-                  ${group.items.length}일
-                  ·
-                  총 ${formatMinutes(group.total)}
-                </div>
-
-              </div>
-
-              <button
-                class="small-btn secondary"
-                onclick="togglePerson('${nameKey}')"
-              >
-                상세보기
-              </button>
-
-            </div>
-
-            <div
-              class="record-list"
-              id="records-${nameKey}"
-            >
-              ${recordsHtml}
-            </div>
-          `;
-
-          summary.appendChild(
-            person
-          );
-        }
-      );
-  }
-
-  function formatMinutes(
-    minutes
-  ) {
-
-    minutes =
-      Number(
-        minutes || 0
-      );
-
-    const h =
-      Math.floor(
-        minutes / 60
-      );
-
-    const m =
-      minutes % 60;
-
-    if (
-      h &&
-      m
-    ) {
-      return `${h}시간 ${m}분`;
-    }
-
-    if (h) {
-      return `${h}시간`;
-    }
-
-    return `${m}분`;
-  }
-
-  function formatDate(
-    date
-  ) {
-
-    const parts =
-      date.split("-");
-
-    return (
-      `${Number(parts[1])}월 ${Number(parts[2])}일`
-    );
-  }
-
-  function escapeHtml(
-    value
-  ) {
-
-    return String(value)
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
-  }
-
-  function openScheduleModal() {
-
-    const modal =
-      document.getElementById(
-        "scheduleModal"
-      );
-
-    if (!modal) {
-      return;
-    }
-
-    getDefaultScheduleMonth();
-
-    renderScheduleCalendar();
-
-    modal.classList.add(
-      "open"
-    );
-
-    document.body.classList.add(
-      "modal-open"
-    );
-
-    modal.scrollTop = 0;
-  }
-
-  function closeScheduleModal() {
-
-    const modal =
-      document.getElementById(
-        "scheduleModal"
-      );
-
-    if (!modal) {
-      return;
-    }
-
-    modal.classList.remove(
-      "open"
-    );
-
-    document.body.classList.remove(
-      "modal-open"
-    );
-  }
-
-  function getDefaultScheduleMonth() {
-
-    const scheduleInput =
-      document.getElementById(
-        "scheduleMonth"
-      );
-
-    if (!scheduleInput) {
-      return;
-    }
-
-    if (
-      !scheduleInput.value
-    ) {
-
-      const monthFilter =
-        document.getElementById(
-          "monthFilter"
-        );
-
-      if (
-        monthFilter &&
-        monthFilter.value
-      ) {
-
-        scheduleInput.value =
-          monthFilter.value;
-
-      } else {
-
-        const now =
-          new Date();
-
-        scheduleInput.value =
-          `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2,"0")}`;
-      }
-    }
-  }
-
-  function renderScheduleCalendar() {
-
-    const wrap =
-      document.getElementById(
-        "scheduleCalendar"
-      );
-
-    const monthInput =
-      document.getElementById(
-        "scheduleMonth"
-      );
-
-    if (
-      !wrap ||
-      !monthInput
-    ) {
-      return;
-    }
-
-    getDefaultScheduleMonth();
-
-    const monthValue =
-      monthInput.value;
-
-    if (!monthValue) {
-
-      wrap.innerHTML = "";
-
-      return;
-    }
-
-    const [year, month] =
-      monthValue
-        .split("-")
-        .map(Number);
-
-    const firstDay =
-      new Date(
-        year,
-        month - 1,
-        1
-      ).getDay();
-
-    const lastDate =
-      new Date(
-        year,
-        month,
-        0
-      ).getDate();
-
-    const records =
-      works
-
-        .filter(
-          item =>
-            item.date &&
-            item.date.startsWith(
-              monthValue
-            )
-        )
-
-        .sort(
-          (a, b) => {
-
-            if (
-              a.date !== b.date
-            ) {
-
-              return (
-                a.date.localeCompare(
-                  b.date
-                )
-              );
-            }
-
-            return (
-              positionOrder(
-                a.position
-              )
-              -
-              positionOrder(
-                b.position
-              )
-            );
-          }
-        );
-
-    const byDate = {};
-
-    records.forEach(item => {
-
-      if (
-        !byDate[item.date]
-      ) {
-
-        byDate[item.date] = [];
-      }
-
-      byDate[item.date].push(
-        item
-      );
-    });
-
-    let out = `
-      <div class="schedule-calendar">
-
-        <div class="schedule-weekday">일</div>
-        <div class="schedule-weekday">월</div>
-        <div class="schedule-weekday">화</div>
-        <div class="schedule-weekday">수</div>
-        <div class="schedule-weekday">목</div>
-        <div class="schedule-weekday">금</div>
-        <div class="schedule-weekday">토</div>
-    `;
-
-    for (
-      let i = 0;
-      i < firstDay;
-      i++
-    ) {
-
-      out += `
-        <div class="schedule-day empty"></div>
-      `;
-    }
-
-    for (
-      let day = 1;
-      day <= lastDate;
-      day++
-    ) {
-
-      const dateString =
-        `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-
-      const dayRecords =
-        byDate[dateString] || [];
-
-      const lines =
-        dayRecords.map(
-          item => `
-            <div class="shift-line">
-
-              <span class="shift-position">
-                ${escapeHtml(item.position || "-")}
-              </span>
-
-              <span class="shift-name">
-                ${escapeHtml(item.name || "")}
-              </span>
-
-            </div>
-          `
-        ).join("");
-
-      out += `
-        <div class="schedule-day">
-
-          <div class="schedule-date">
-            ${day}
-          </div>
-
-          ${lines}
-
-        </div>
-      `;
-    }
-
-    out += `</div>`;
-
-    wrap.innerHTML = out;
-  }
-
-  function positionOrder(
-    position
-  ) {
-
-    const order = {
-      "오픈": 1,
-      "오전미들": 2,
-      "미들": 3,
-      "오후미들": 4,
-      "마감": 5,
-      "교육": 6
-    };
-
-    return (
-      order[position]
-      ||
-      99
-    );
-  }
-
-  function attachAutosave() {
-
-    [
-      "employeeSelect",
-      "position",
-      "defaultStart",
-      "defaultEnd"
-    ].forEach(id => {
-
-      const el =
-        document.getElementById(id);
-
-      if (!el) {
-        return;
-      }
-
-      el.addEventListener(
-        "change",
-        saveSettings
-      );
-    });
-
-    document
-      .getElementById("monthPicker")
-      .addEventListener(
-        "change",
-        buildCalendar
-      );
-
-    document
-      .getElementById("monthFilter")
-      .addEventListener(
-        "change",
-        () => {
-          saveSettings();
-          renderWorks();
-        }
-      );
-
-    document
-      .getElementById("scheduleMonth")
-      .addEventListener(
-        "change",
-        () => {
-          saveSettings();
-          renderScheduleCalendar();
-        }
-      );
-  }
-
-  renderEmployees();
-
-  restoreSettings();
-
-  if (
-    document.getElementById("monthPicker").value
-  ) {
-    buildCalendar();
-  }
-
-  renderWorks();
-
-  getDefaultScheduleMonth();
-
-  renderScheduleCalendar();
-
-  attachAutosave();
+el.value=
+settings[id];
+
+}
+
+});
+
+}
+
+
+/* =========================
+   직원 관리
+========================= */
+
+function addEmployee(){
+
+const input=
+document.getElementById(
+"newEmployee"
+);
+
+const name=
+input.value.trim();
+
+
+if(!name){
+
+alert(
+"직원 이름을 입력해줘!"
+);
+
+return;
+
+}
+
+
+if(
+employees.includes(name)
+){
+
+alert(
+"이미 등록된 직원이에요."
+);
+
+return;
+
+}
+
+
+employees.push(name);
+
+saveEmployees();
+
+input.value="";
+
+renderEmployees();
+
+}
+
+
+function deleteEmployee(name){
+
+if(
+!confirm(
+`${name} 직원을 목록에서 삭제할까요?\n기존 근무 기록은 그대로 남아요.`
+)
+){
+
+return;
+
+}
+
+
+employees=
+employees.filter(
+item=>item!==name
+);
+
+
+saveEmployees();
+
+renderEmployees();
+
+}
+
+
+function renderEmployees(){
+
+const list=
+document.getElementById(
+"employeeList"
+);
+
+const select=
+document.getElementById(
+"employeeSelect"
+);
+
+
+list.innerHTML="";
+
+select.innerHTML=
+`<option value="">직원을 선택하세요</option>`;
+
+
+if(
+employees.length===0
+){
+
+list.innerHTML=
+`<div class="empty">직원을 먼저 추가해주세요.</div>`;
+
+}
+
+
+employees.forEach(name=>{
+
+const row=
+document.createElement(
+"div"
+);
+
+row.className=
+"employee-row";
+
+
+row.innerHTML=`
+
+<div class="employee-name">
+${escapeHtml(name)}
+</div>
+
+<button
+class="small-btn danger"
+onclick='deleteEmployee(${JSON.stringify(name)})'
+>
+삭제
+</button>
+
+`;
+
+
+list.appendChild(row);
+
+
+const option=
+document.createElement(
+"option"
+);
+
+option.value=name;
+
+option.textContent=name;
+
+select.appendChild(option);
+
+});
+
+
+if(
+settings.employeeSelect
+&&
+employees.includes(
+settings.employeeSelect
+)
+){
+
+select.value=
+settings.employeeSelect;
+
+}
+
+}
+
+
+/* =========================
+   입력 달력
+========================= */
+
+function buildCalendar(){
+
+const monthValue=
+document.getElementById(
+"monthPicker"
+).value;
+
+
+const wrap=
+document.getElementById(
+"calendarWrap"
+);
+
+
+selectedDates=[];
+
+updateSelectedCount();
+
+
+if(!monthValue){
+
+wrap.innerHTML="";
+
+return;
+
+}
+
+
+const [year,month]=
+monthValue
+.split("-")
+.map(Number);
+
+
+const firstDay=
+new Date(
+year,
+month-1,
+1
+).getDay();
+
+
+const lastDate=
+new Date(
+year,
+month,
+0
+).getDate();
+
+
+let html=`
+
+<div class="calendar">
+
+<div class="day-name">일</div>
+<div class="day-name">월</div>
+<div class="day-name">화</div>
+<div class="day-name">수</div>
+<div class="day-name">목</div>
+<div class="day-name">금</div>
+<div class="day-name">토</div>
+
+`;
+
+
+for(
+let i=0;
+i<firstDay;
+i++
+){
+
+html+=`
+
+<button
+class="day empty-day"
+type="button"
+></button>
+
+`;
+
+}
+
+
+for(
+let day=1;
+day<=lastDate;
+day++
+){
+
+const dateString=
+`${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+
+
+html+=`
+
+<button
+type="button"
+class="day"
+id="day-${day}"
+onclick="toggleDate('${dateString}',${day})"
+>
+
+${day}
+
+</button>
+
+`;
+
+}
+
+
+html+=
+`</div>`;
+
+
+wrap.innerHTML=
+html;
+
+
+saveSettings();
+
+}
+
+
+function toggleDate(
+dateString,
+day
+){
+
+const btn=
+document.getElementById(
+`day-${day}`
+);
+
+
+if(
+selectedDates.includes(
+dateString
+)
+){
+
+selectedDates=
+selectedDates.filter(
+d=>d!==dateString
+);
+
+btn.classList.remove(
+"selected"
+);
+
+}else{
+
+selectedDates.push(
+dateString
+);
+
+selectedDates.sort();
+
+btn.classList.add(
+"selected"
+);
+
+}
+
+
+updateSelectedCount();
+
+}
+
+
+function updateSelectedCount(){
+
+document.getElementById(
+"selectedCount"
+).textContent=
+
+`선택된 날짜 ${selectedDates.length}일`;
+
+}
+
+
+/* =========================
+   저장 전 확인
+========================= */
+
+function makeSelectedDates(){
+
+const employee=
+document.getElementById(
+"employeeSelect"
+).value;
+
+
+const position=
+document.getElementById(
+"position"
+).value;
+
+
+const defaultStart=
+document.getElementById(
+"defaultStart"
+).value;
+
+
+const defaultEnd=
+document.getElementById(
+"defaultEnd"
+).value;
+
+
+if(!employee){
+
+alert(
+"직원을 선택해줘!"
+);
+
+return;
+
+}
+
+
+if(
+selectedDates.length===0
+){
+
+alert(
+"달력에서 근무 날짜를 선택해줘!"
+);
+
+return;
+
+}
+
+
+if(
+!defaultStart
+||
+!defaultEnd
+){
+
+alert(
+"기본 출근시간과 퇴근시간을 입력해줘!"
+);
+
+return;
+
+}
+
+
+generatedWorks=
+selectedDates.map(
+date=>({
+
+date,
+
+employee,
+
+position,
+
+start:defaultStart,
+
+end:defaultEnd
+
+})
+);
+
+
+saveSettings();
+
+renderGenerated();
+
+}
+
+
+function renderGenerated(){
+
+const card=
+document.getElementById(
+"generatedCard"
+);
+
+
+const list=
+document.getElementById(
+"generatedList"
+);
+
+
+card.style.display=
+"block";
+
+card.open=
+true;
+
+
+list.innerHTML="";
+
+
+generatedWorks.forEach(
+(item,index)=>{
+
+const row=
+document.createElement(
+"div"
+);
+
+row.className=
+"generated-row";
+
+
+row.innerHTML=`
+
+<div class="generated-title">
+${formatDate(item.date)}
+</div>
+
+<div class="generated-info">
+
+${escapeHtml(item.employee)}
+
+·
+
+${escapeHtml(item.position)}
+
+·
+
+출근 ${item.start}
+
+</div>
+
+<input
+type="time"
+value="${item.end}"
+onchange="changeGeneratedEnd(${index},this.value)"
+>
+
+`;
+
+
+list.appendChild(
+row
+);
+
+});
+
+}
+
+
+function changeGeneratedEnd(
+index,
+value
+){
+
+generatedWorks[index].end=
+value;
+
+}
+
+
+/* =========================
+   근무 기록 저장
+========================= */
+
+function saveGeneratedWorks(){
+
+if(
+generatedWorks.length===0
+){
+
+alert(
+"먼저 날짜를 만들어줘!"
+);
+
+return;
+
+}
+
+
+generatedWorks.forEach(
+item=>{
+
+works.push({
+
+id:
+Date.now()
++
+Math.floor(
+Math.random()*100000
+),
+
+name:
+item.employee,
+
+date:
+item.date,
+
+position:
+item.position,
+
+start:
+item.start,
+
+end:
+item.end,
+
+total:
+calculateWorkMinutes(
+item.start,
+item.end
+)
+
+});
+
+});
+
+
+saveWorks();
+
+
+generatedWorks=[];
+
+
+document.getElementById(
+"generatedCard"
+).style.display=
+"none";
+
+
+alert(
+"근무 기록이 저장됐어요!"
+);
+
+
+renderWorks();
+
+renderScheduleCalendar();
+
+}
+
+
+/* =========================
+   시간 계산
+========================= */
+
+function calculateWorkMinutes(
+start,
+end
+){
+
+const [sh,sm]=
+start
+.split(":")
+.map(Number);
+
+
+const [eh,em]=
+end
+.split(":")
+.map(Number);
+
+
+let startMin=
+sh*60+sm;
+
+
+let endMin=
+eh*60+em;
+
+
+if(
+endMin<startMin
+){
+
+endMin+=1440;
+
+}
+
+
+return(
+endMin-startMin
+);
+
+}
+
+
+/* =========================
+   기록 수정
+========================= */
+
+function updateRecord(id){
+
+const startInput=
+document.getElementById(
+`edit-start-${id}`
+);
+
+
+const endInput=
+document.getElementById(
+`edit-end-${id}`
+);
+
+
+const positionInput=
+document.getElementById(
+`edit-position-${id}`
+);
+
+
+if(
+!startInput
+||
+!startInput.value
+){
+
+alert(
+"출근시간을 입력해줘!"
+);
+
+return;
+
+}
+
+
+if(
+!endInput
+||
+!endInput.value
+){
+
+alert(
+"퇴근시간을 입력해줘!"
+);
+
+return;
+
+}
+
+
+const item=
+works.find(
+w=>
+String(w.id)
+===
+String(id)
+);
+
+
+if(!item){
+return;
+}
+
+
+item.start=
+startInput.value;
+
+
+item.end=
+endInput.value;
+
+
+item.position=
+positionInput.value;
+
+
+item.total=
+calculateWorkMinutes(
+item.start,
+item.end
+);
+
+
+saveWorks();
+
+renderWorks();
+
+renderScheduleCalendar();
+
+
+alert(
+"근무기록이 수정됐어요!"
+);
+
+}
+
+
+function toggleEdit(id){
+
+const box=
+document.getElementById(
+`edit-box-${id}`
+);
+
+
+if(box){
+
+box.classList.toggle(
+"open"
+);
+
+}
+
+}
+
+
+function togglePerson(
+nameKey
+){
+
+const box=
+document.getElementById(
+`records-${nameKey}`
+);
+
+
+if(box){
+
+box.classList.toggle(
+"open"
+);
+
+}
+
+}
+
+
+function deleteWork(id){
+
+if(
+!confirm(
+"이 근무 기록을 삭제할까요?"
+)
+){
+
+return;
+
+}
+
+
+works=
+works.filter(
+item=>
+String(item.id)
+!==
+String(id)
+);
+
+
+saveWorks();
+
+renderWorks();
+
+renderScheduleCalendar();
+
+}
+
+
+/* =========================
+   기록 목록
+========================= */
+
+function clearFilter(){
+
+document.getElementById(
+"monthFilter"
+).value="";
+
+
+saveSettings();
+
+renderWorks();
+
+}
+
+
+function renderWorks(){
+
+const summary=
+document.getElementById(
+"summary"
+);
+
+
+const monthFilter=
+document.getElementById(
+"monthFilter"
+).value;
+
+
+let filtered=[
+...works
+];
+
+
+if(monthFilter){
+
+filtered=
+filtered.filter(
+item=>
+item.date
+&&
+item.date.startsWith(
+monthFilter
+)
+);
+
+}
+
+
+filtered.sort(
+(a,b)=>
+String(a.date)
+.localeCompare(
+String(b.date)
+)
+);
+
+
+if(
+filtered.length===0
+){
+
+summary.innerHTML=`
+
+<div class="empty">
+아직 기록이 없어요.
+</div>
+
+`;
+
+return;
+
+}
+
+
+const grouped={};
+
+
+filtered.forEach(
+item=>{
+
+if(
+!grouped[item.name]
+){
+
+grouped[item.name]={
+total:0,
+items:[]
+};
+
+}
+
+
+grouped[item.name].total+=
+Number(
+item.total||0
+);
+
+
+grouped[item.name].items.push(
+item
+);
+
+});
+
+
+summary.innerHTML="";
+
+
+Object.keys(grouped)
+.sort()
+.forEach(
+(name,idx)=>{
+
+const group=
+grouped[name];
+
+
+const nameKey=
+`p${idx}`;
+
+
+const person=
+document.createElement(
+"div"
+);
+
+person.className=
+"person-card";
+
+
+const recordsHtml=
+group.items.map(
+item=>{
+
+const positionOptions=
+positions.map(
+p=>
+`<option value="${p}" ${item.position===p?"selected":""}>${p}</option>`
+)
+.join("");
+
+
+return`
+
+<div class="record">
+
+<div class="record-date">
+${formatDate(item.date)}
+</div>
+
+<div class="record-meta">
+
+${escapeHtml(item.position||"-")}
+
+·
+
+${item.start}
+
+→
+
+${item.end}
+
+<br>
+
+${formatMinutes(item.total)}
+
+</div>
+
+
+<div class="record-actions">
+
+<button
+class="small-btn secondary"
+onclick="toggleEdit('${item.id}')"
+>
+기록 수정
+</button>
+
+<button
+class="small-btn danger"
+onclick="deleteWork('${item.id}')"
+>
+삭제
+</button>
+
+</div>
+
+
+<div
+class="edit-box"
+id="edit-box-${item.id}"
+>
+
+<label>포지션</label>
+
+<select
+id="edit-position-${item.id}"
+>
+
+${positionOptions}
+
+</select>
+
+
+<label>출근시간</label>
+
+<input
+id="edit-start-${item.id}"
+type="time"
+value="${item.start}"
+>
+
+
+<label>퇴근시간</label>
+
+<input
+id="edit-end-${item.id}"
+type="time"
+value="${item.end}"
+>
+
+
+<button
+onclick="updateRecord('${item.id}')"
+>
+수정 저장
+</button>
+
+</div>
+
+</div>
+
+`;
+
+})
+.join("");
+
+
+person.innerHTML=`
+
+<div class="person-top">
+
+<div>
+
+<div class="person-name">
+${escapeHtml(name)}
+</div>
+
+<div class="person-total">
+
+${group.items.length}일
+
+·
+
+총 ${formatMinutes(group.total)}
+
+</div>
+
+</div>
+
+
+<button
+class="small-btn secondary"
+onclick="togglePerson('${nameKey}')"
+>
+상세보기
+</button>
+
+</div>
+
+
+<div
+class="record-list"
+id="records-${nameKey}"
+>
+
+${recordsHtml}
+
+</div>
+
+`;
+
+
+summary.appendChild(
+person
+);
+
+});
+
+}
+
+
+/* =========================
+   글자 표시
+========================= */
+
+function formatMinutes(
+minutes
+){
+
+minutes=
+Number(
+minutes||0
+);
+
+
+const h=
+Math.floor(
+minutes/60
+);
+
+
+const m=
+minutes%60;
+
+
+if(
+h&&m
+){
+
+return(
+`${h}시간 ${m}분`
+);
+
+}
+
+
+if(h){
+
+return(
+`${h}시간`
+);
+
+}
+
+
+return(
+`${m}분`
+);
+
+}
+
+
+function formatDate(
+date
+){
+
+const parts=
+String(date)
+.split("-");
+
+
+return(
+`${Number(parts[1])}월 ${Number(parts[2])}일`
+);
+
+}
+
+
+function escapeHtml(
+value
+){
+
+return String(
+value??""
+)
+
+.replaceAll(
+"&",
+"&amp;"
+)
+
+.replaceAll(
+"<",
+"&lt;"
+)
+
+.replaceAll(
+">",
+"&gt;"
+)
+
+.replaceAll(
+'"',
+"&quot;"
+)
+
+.replaceAll(
+"'",
+"&#039;"
+);
+
+}
+
+
+/* =========================
+   월간 스케줄
+========================= */
+
+function openScheduleModal(){
+
+const modal=
+document.getElementById(
+"scheduleModal"
+);
+
+
+getDefaultScheduleMonth();
+
+renderScheduleCalendar();
+
+
+modal.classList.add(
+"open"
+);
+
+
+document.body.classList.add(
+"modal-open"
+);
+
+
+modal.scrollTop=
+0;
+
+}
+
+
+function closeScheduleModal(){
+
+document.getElementById(
+"scheduleModal"
+)
+.classList.remove(
+"open"
+);
+
+
+document.body
+.classList.remove(
+"modal-open"
+);
+
+}
+
+
+function getDefaultScheduleMonth(){
+
+const scheduleInput=
+document.getElementById(
+"scheduleMonth"
+);
+
+
+if(
+scheduleInput.value
+){
+
+return;
+
+}
+
+
+const monthFilter=
+document.getElementById(
+"monthFilter"
+);
+
+
+if(
+monthFilter.value
+){
+
+scheduleInput.value=
+monthFilter.value;
+
+}else{
+
+const now=
+new Date();
+
+
+scheduleInput.value=
+`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+
+}
+
+}
+
+
+function getScheduleData(){
+
+getDefaultScheduleMonth();
+
+
+const monthValue=
+document.getElementById(
+"scheduleMonth"
+).value;
+
+
+if(!monthValue){
+return null;
+}
+
+
+const [year,month]=
+monthValue
+.split("-")
+.map(Number);
+
+
+const firstDay=
+new Date(
+year,
+month-1,
+1
+).getDay();
+
+
+const lastDate=
+new Date(
+year,
+month,
+0
+).getDate();
+
+
+const records=
+works
+
+.filter(
+item=>
+item.date
+&&
+item.date.startsWith(
+monthValue
+)
+)
+
+.sort(
+(a,b)=>{
+
+if(
+a.date!==b.date
+){
+
+return(
+a.date.localeCompare(
+b.date
+)
+);
+
+}
+
+
+return(
+positionOrder(
+a.position
+)
+-
+positionOrder(
+b.position
+)
+);
+
+}
+);
+
+
+const byDate={};
+
+
+records.forEach(
+item=>{
+
+if(
+!byDate[item.date]
+){
+
+byDate[item.date]=[];
+
+}
+
+
+byDate[item.date].push(
+item
+);
+
+});
+
+
+return{
+
+monthValue,
+year,
+month,
+firstDay,
+lastDate,
+byDate
+
+};
+
+}
+
+
+function renderScheduleCalendar(){
+
+const wrap=
+document.getElementById(
+"scheduleCalendar"
+);
+
+
+const data=
+getScheduleData();
+
+
+if(!data){
+
+wrap.innerHTML="";
+
+return;
+
+}
+
+
+const {
+year,
+month,
+firstDay,
+lastDate,
+byDate
+}=data;
+
+
+let out=`
+
+<div class="schedule-calendar">
+
+<div class="schedule-weekday">일</div>
+<div class="schedule-weekday">월</div>
+<div class="schedule-weekday">화</div>
+<div class="schedule-weekday">수</div>
+<div class="schedule-weekday">목</div>
+<div class="schedule-weekday">금</div>
+<div class="schedule-weekday">토</div>
+
+`;
+
+
+for(
+let i=0;
+i<firstDay;
+i++
+){
+
+out+=`
+
+<div class="schedule-day empty"></div>
+
+`;
+
+}
+
+
+for(
+let day=1;
+day<=lastDate;
+day++
+){
+
+const dateString=
+`${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+
+
+const dayRecords=
+byDate[dateString]||[];
+
+
+const lines=
+dayRecords.map(
+item=>`
+
+<div class="shift-line">
+
+<span class="shift-position">
+${escapeHtml(item.position||"-")}
+</span>
+
+<span class="shift-name">
+${escapeHtml(item.name||"")}
+</span>
+
+</div>
+
+`
+)
+.join("");
+
+
+out+=`
+
+<div class="schedule-day">
+
+<div class="schedule-date">
+${day}
+</div>
+
+${lines}
+
+</div>
+
+`;
+
+}
+
+
+out+=
+`</div>`;
+
+
+wrap.innerHTML=
+out;
+
+
+saveSettings();
+
+}
+
+
+function positionOrder(
+position
+){
+
+const order={
+
+"오픈":1,
+
+"오전미들":2,
+
+"미들":3,
+
+"오후미들":4,
+
+"마감":5,
+
+"교육":6
+
+};
+
+
+return(
+order[position]
+||
+99
+);
+
+}
+
+
+/* =========================
+   이미지 저장 기능
+   저장 데이터는 건드리지 않음
+========================= */
+
+function roundedRect(
+ctx,
+x,
+y,
+w,
+h,
+r
+){
+
+ctx.beginPath();
+
+ctx.moveTo(
+x+r,
+y
+);
+
+ctx.lineTo(
+x+w-r,
+y
+);
+
+ctx.quadraticCurveTo(
+x+w,
+y,
+x+w,
+y+r
+);
+
+ctx.lineTo(
+x+w,
+y+h-r
+);
+
+ctx.quadraticCurveTo(
+x+w,
+y+h,
+x+w-r,
+y+h
+);
+
+ctx.lineTo(
+x+r,
+y+h
+);
+
+ctx.quadraticCurveTo(
+x,
+y+h,
+x,
+y+h-r
+);
+
+ctx.lineTo(
+x,
+y+r
+);
+
+ctx.quadraticCurveTo(
+x,
+y,
+x+r,
+y
+);
+
+ctx.closePath();
+
+}
+
+
+function saveScheduleImage(){
+
+const data=
+getScheduleData();
+
+
+if(!data){
+
+alert(
+"달력을 먼저 선택해줘!"
+);
+
+return;
+
+}
+
+
+const {
+year,
+month,
+firstDay,
+lastDate,
+byDate
+}=data;
+
+
+/* 이미지 크기 */
+
+const width=1400;
+
+const margin=60;
+
+const headerHeight=150;
+
+const weekdayHeight=55;
+
+const cellWidth=
+(width-margin*2)/7;
+
+
+let maxPeople=1;
+
+
+Object.values(byDate)
+.forEach(items=>{
+
+maxPeople=
+Math.max(
+maxPeople,
+items.length
+);
+
+});
+
+
+const cellHeight=
+Math.max(
+180,
+75+
+maxPeople*38
+);
+
+
+const rows=
+Math.ceil(
+(firstDay+lastDate)/7
+);
+
+
+const height=
+margin+
+headerHeight+
+weekdayHeight+
+rows*cellHeight+
+margin;
+
+
+const canvas=
+document.createElement(
+"canvas"
+);
+
+
+canvas.width=
+width;
+
+canvas.height=
+height;
+
+
+const ctx=
+canvas.getContext(
+"2d"
+);
+
+
+/* 배경 */
+
+ctx.fillStyle=
+"#f6f7f9";
+
+ctx.fillRect(
+0,
+0,
+width,
+height
+);
+
+
+/* 제목 */
+
+ctx.textAlign=
+"left";
+
+ctx.textBaseline=
+"middle";
+
+ctx.fillStyle=
+"#111";
+
+ctx.font=
+"700 52px -apple-system, BlinkMacSystemFont, Arial, sans-serif";
+
+
+ctx.fillText(
+`${year}년 ${month}월 월간 스케줄`,
+margin,
+95
+);
+
+
+/* 요일 */
+
+const weekdays=[
+"일",
+"월",
+"화",
+"수",
+"목",
+"금",
+"토"
+];
+
+
+ctx.font=
+"700 24px -apple-system, BlinkMacSystemFont, Arial, sans-serif";
+
+ctx.fillStyle=
+"#777";
+
+ctx.textAlign=
+"center";
+
+
+weekdays.forEach(
+(day,index)=>{
+
+ctx.fillText(
+
+day,
+
+margin
++
+index*cellWidth
++
+cellWidth/2,
+
+headerHeight
++
+weekdayHeight/2
+
+);
+
+});
+
+
+/* 날짜칸 */
+
+for(
+let day=1;
+day<=lastDate;
+day++
+){
+
+const index=
+firstDay+day-1;
+
+
+const column=
+index%7;
+
+
+const row=
+Math.floor(
+index/7
+);
+
+
+const x=
+margin+
+column*cellWidth+
+5;
+
+
+const y=
+headerHeight+
+weekdayHeight+
+row*cellHeight+
+5;
+
+
+const w=
+cellWidth-10;
+
+
+const h=
+cellHeight-10;
+
+
+/* 흰색 카드 */
+
+roundedRect(
+ctx,
+x,
+y,
+w,
+h,
+16
+);
+
+
+ctx.fillStyle=
+"#fff";
+
+ctx.fill();
+
+
+ctx.strokeStyle=
+"#e8e8e8";
+
+ctx.lineWidth=
+2;
+
+ctx.stroke();
+
+
+/* 날짜 숫자 */
+
+ctx.textAlign=
+"left";
+
+ctx.fillStyle=
+"#111";
+
+ctx.font=
+"800 28px -apple-system, BlinkMacSystemFont, Arial, sans-serif";
+
+
+ctx.fillText(
+String(day),
+x+16,
+y+28
+);
+
+
+const dateString=
+`${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+
+
+const items=
+byDate[dateString]
+||
+[];
+
+
+let lineY=
+y+62;
+
+
+/* 근무자 */
+
+items.forEach(
+item=>{
+
+roundedRect(
+ctx,
+x+12,
+lineY,
+w-24,
+31,
+8
+);
+
+
+ctx.fillStyle=
+"#f5f6f7";
+
+ctx.fill();
+
+
+ctx.textAlign=
+"left";
+
+ctx.textBaseline=
+"middle";
+
+
+ctx.font=
+"800 18px -apple-system, BlinkMacSystemFont, Arial, sans-serif";
+
+ctx.fillStyle=
+"#111";
+
+
+ctx.fillText(
+item.position||"-",
+x+20,
+lineY+16
+);
+
+
+const positionWidth=
+ctx.measureText(
+item.position||"-"
+).width;
+
+
+ctx.font=
+"400 18px -apple-system, BlinkMacSystemFont, Arial, sans-serif";
+
+ctx.fillStyle=
+"#555";
+
+
+ctx.fillText(
+item.name||"",
+x+28+positionWidth,
+lineY+16
+);
+
+
+lineY+=38;
+
+});
+
+}
+
+
+/* PNG 만들기 */
+
+canvas.toBlob(
+async blob=>{
+
+if(!blob){
+
+alert(
+"이미지를 만들지 못했어."
+);
+
+return;
+
+}
+
+
+const filename=
+`${year}-${String(month).padStart(2,"0")}-근무스케줄.png`;
+
+
+const file=
+new File(
+[blob],
+filename,
+{
+type:"image/png"
+}
+);
+
+
+/* 아이폰은 공유창 우선 */
+
+try{
+
+if(
+navigator.canShare
+&&
+navigator.canShare({
+files:[file]
+})
+){
+
+await navigator.share({
+
+files:[file],
+
+title:
+`${year}년 ${month}월 근무스케줄`
+
+});
+
+
+return;
+
+}
+
+}catch(error){
+
+if(
+error.name==="AbortError"
+){
+
+return;
+
+}
+
+}
+
+
+/* 공유가 안 되는 브라우저는 다운로드 */
+
+const url=
+URL.createObjectURL(
+blob
+);
+
+
+const link=
+document.createElement(
+"a"
+);
+
+
+link.href=
+url;
+
+link.download=
+filename;
+
+
+document.body.appendChild(
+link
+);
+
+
+link.click();
+
+
+link.remove();
+
+
+setTimeout(
+()=>{
+
+URL.revokeObjectURL(
+url
+);
+
+},
+1500
+);
+
+},
+
+"image/png"
+
+);
+
+}
+
+
+/* =========================
+   설정 변경 감지
+========================= */
+
+function attachAutosave(){
+
+[
+"employeeSelect",
+"position",
+"defaultStart",
+"defaultEnd"
+]
+
+.forEach(id=>{
+
+const el=
+document.getElementById(id);
+
+
+el.addEventListener(
+"change",
+saveSettings
+);
+
+});
+
+
+document
+.getElementById(
+"monthPicker"
+)
+.addEventListener(
+"change",
+buildCalendar
+);
+
+
+document
+.getElementById(
+"monthFilter"
+)
+.addEventListener(
+"change",
+()=>{
+
+saveSettings();
+
+renderWorks();
+
+}
+);
+
+
+document
+.getElementById(
+"scheduleMonth"
+)
+.addEventListener(
+"change",
+()=>{
+
+saveSettings();
+
+renderScheduleCalendar();
+
+}
+);
+
+}
+
+
+/* =========================
+   시작
+========================= */
+
+renderEmployees();
+
+restoreSettings();
+
+
+if(
+document.getElementById(
+"monthPicker"
+).value
+){
+
+buildCalendar();
+
+}
+
+
+renderWorks();
+
+getDefaultScheduleMonth();
+
+renderScheduleCalendar();
+
+attachAutosave();
 
 </script>
 
