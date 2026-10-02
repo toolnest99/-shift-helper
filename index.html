@@ -4,10 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>알바 근무시간 정리기</title>
+
   <style>
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #f6f7f9;
       color: #222;
     }
@@ -19,13 +20,12 @@
     }
 
     h1 {
-      font-size: 28px;
       margin-bottom: 6px;
     }
 
     .sub {
       color: #777;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .card {
@@ -54,30 +54,17 @@
 
     button {
       margin-top: 18px;
-      border: none;
       background: #111;
       color: white;
+      border: none;
       font-weight: 700;
-      cursor: pointer;
-    }
-
-    button.delete {
-      background: #eee;
-      color: #333;
-      margin-top: 0;
-      padding: 8px 10px;
-      width: auto;
-    }
-
-    .summary {
-      display: grid;
-      gap: 10px;
     }
 
     .summary-item {
       background: #f2f3f5;
       padding: 12px 14px;
       border-radius: 12px;
+      margin-bottom: 8px;
     }
 
     .table-wrap {
@@ -86,8 +73,8 @@
 
     table {
       width: 100%;
+      min-width: 650px;
       border-collapse: collapse;
-      min-width: 620px;
     }
 
     th, td {
@@ -101,191 +88,472 @@
       background: #fafafa;
     }
 
+    .delete {
+      width: auto;
+      margin: 0;
+      padding: 7px 10px;
+      background: #eee;
+      color: #333;
+    }
+
     .empty {
       color: #999;
       text-align: center;
-      padding: 20px 0;
+      padding: 18px;
+    }
+
+    .filter-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
     }
   </style>
 </head>
 
 <body>
-  <div class="wrap">
-    <h1>알바 근무시간 정리기</h1>
-    <div class="sub">직원별 근무시간을 한 번에 기록하고 합계까지 확인해요.</div>
 
-    <div class="card">
-      <label>직원 이름</label>
-      <input id="name" type="text" placeholder="예: 서윤" />
+<div class="wrap">
 
-      <label>날짜</label>
-      <input id="date" type="date" />
+  <h1>알바 근무시간 정리기</h1>
+  <div class="sub">직원별 근무시간을 기록하고 월별 합계를 확인해요.</div>
 
-      <label>출근 시간</label>
-      <input id="start" type="time" />
 
-      <label>퇴근 시간</label>
-      <input id="end" type="time" />
+  <div class="card">
 
-      <label>휴게시간</label>
-      <select id="breakTime">
-        <option value="0">없음</option>
-        <option value="15">15분</option>
-        <option value="30">30분</option>
-        <option value="45">45분</option>
-        <option value="60">1시간</option>
-      </select>
+    <label>직원 이름</label>
 
-      <button onclick="addWork()">근무 기록 추가</button>
-    </div>
+    <select id="name">
+      <option value="">직원을 선택하세요</option>
+      <option value="은정">은정</option>
+      <option value="은서">은서</option>
+      <option value="서윤">서윤</option>
+      <option value="승연">승연</option>
+      <option value="지민">지민</option>
+      <option value="소은">소은</option>
+      <option value="승원">승원</option>
+    </select>
 
-    <div class="card">
-      <h2>직원별 총 근무시간</h2>
-      <div id="summary" class="summary">
-        <div class="empty">아직 기록이 없어요.</div>
-      </div>
-    </div>
 
-    <div class="card">
-      <h2>전체 근무 기록</h2>
+    <label>날짜</label>
+    <input id="date" type="date" />
 
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>직원</th>
-              <th>날짜</th>
-              <th>출근</th>
-              <th>퇴근</th>
-              <th>휴게</th>
-              <th>실근무</th>
-              <th>삭제</th>
-            </tr>
-          </thead>
-          <tbody id="workList"></tbody>
-        </table>
-      </div>
-    </div>
+
+    <label>출근 시간</label>
+    <input id="start" type="time" />
+
+
+    <label>퇴근 시간</label>
+    <input id="end" type="time" />
+
+
+    <label>휴게시간</label>
+
+    <select id="breakTime">
+      <option value="0">없음</option>
+      <option value="15">15분</option>
+      <option value="30">30분</option>
+      <option value="45">45분</option>
+      <option value="60">1시간</option>
+    </select>
+
+
+    <button onclick="addWork()">
+      근무 기록 추가
+    </button>
+
   </div>
 
-  <script>
-    let works = JSON.parse(localStorage.getItem("works") || "[]");
 
-    function timeToMinutes(time) {
-      const [hour, minute] = time.split(":").map(Number);
-      return hour * 60 + minute;
-    }
+  <div class="card">
 
-    function formatMinutes(minutes) {
-      const h = Math.floor(minutes / 60);
-      const m = minutes % 60;
+    <h2>월별 보기</h2>
 
-      if (h > 0 && m > 0) return `${h}시간 ${m}분`;
-      if (h > 0) return `${h}시간`;
-      return `${m}분`;
-    }
+    <div class="filter-row">
 
-    function addWork() {
-      const name = document.getElementById("name").value.trim();
-      const date = document.getElementById("date").value;
-      const start = document.getElementById("start").value;
-      const end = document.getElementById("end").value;
-      const breakTime = Number(document.getElementById("breakTime").value);
+      <input
+        id="monthFilter"
+        type="month"
+        onchange="render()"
+      />
 
-      if (!name || !date || !start || !end) {
-        alert("직원 이름, 날짜, 출근시간, 퇴근시간을 모두 입력해줘!");
-        return;
-      }
+      <button
+        style="margin:0"
+        onclick="clearFilter()"
+      >
+        전체 보기
+      </button>
 
-      let startMin = timeToMinutes(start);
-      let endMin = timeToMinutes(end);
+    </div>
 
-      if (endMin < startMin) {
-        endMin += 24 * 60;
-      }
+  </div>
 
-      const total = endMin - startMin - breakTime;
 
-      if (total <= 0) {
-        alert("근무시간을 다시 확인해줘!");
-        return;
-      }
+  <div class="card">
 
-      works.push({
-        id: Date.now(),
-        name,
-        date,
-        start,
-        end,
-        breakTime,
-        total
-      });
+    <h2>직원별 총 근무시간</h2>
 
-      localStorage.setItem("works", JSON.stringify(works));
+    <div id="summary">
+      <div class="empty">
+        아직 기록이 없어요.
+      </div>
+    </div>
 
-      document.getElementById("name").value = "";
-      document.getElementById("start").value = "";
-      document.getElementById("end").value = "";
+  </div>
 
-      render();
-    }
 
-    function deleteWork(id) {
-      works = works.filter(item => item.id !== id);
-      localStorage.setItem("works", JSON.stringify(works));
-      render();
-    }
+  <div class="card">
 
-    function render() {
-      const workList = document.getElementById("workList");
-      const summary = document.getElementById("summary");
+    <h2>전체 근무 기록</h2>
 
-      workList.innerHTML = "";
+    <div class="table-wrap">
 
-      works
-        .sort((a, b) => a.date.localeCompare(b.date))
-        .forEach(item => {
-          const tr = document.createElement("tr");
+      <table>
 
-          tr.innerHTML = `
-            <td>${item.name}</td>
-            <td>${item.date}</td>
-            <td>${item.start}</td>
-            <td>${item.end}</td>
-            <td>${item.breakTime}분</td>
-            <td>${formatMinutes(item.total)}</td>
-            <td>
-              <button class="delete" onclick="deleteWork(${item.id})">삭제</button>
-            </td>
-          `;
+        <thead>
 
-          workList.appendChild(tr);
-        });
+          <tr>
+            <th>직원</th>
+            <th>날짜</th>
+            <th>출근</th>
+            <th>퇴근</th>
+            <th>휴게</th>
+            <th>실근무</th>
+            <th>삭제</th>
+          </tr>
 
-      const totals = {};
+        </thead>
 
-      works.forEach(item => {
-        totals[item.name] = (totals[item.name] || 0) + item.total;
-      });
+        <tbody id="workList"></tbody>
 
-      summary.innerHTML = "";
+      </table>
 
-      const names = Object.keys(totals);
+    </div>
 
-      if (names.length === 0) {
-        summary.innerHTML = `<div class="empty">아직 기록이 없어요.</div>`;
-        return;
-      }
+  </div>
 
-      names.forEach(name => {
-        const div = document.createElement("div");
-        div.className = "summary-item";
-        div.innerHTML = `<strong>${name}</strong> · ${formatMinutes(totals[name])}`;
-        summary.appendChild(div);
-      });
-    }
 
-    render();
-  </script>
+</div>
+
+
+<script>
+
+let works = JSON.parse(
+  localStorage.getItem("works") || "[]"
+);
+
+
+function timeToMinutes(time) {
+
+  const [hour, minute] =
+    time.split(":").map(Number);
+
+  return hour * 60 + minute;
+
+}
+
+
+function formatMinutes(minutes) {
+
+  const h = Math.floor(minutes / 60);
+
+  const m = minutes % 60;
+
+
+  if (h > 0 && m > 0)
+    return `${h}시간 ${m}분`;
+
+
+  if (h > 0)
+    return `${h}시간`;
+
+
+  return `${m}분`;
+
+}
+
+
+function addWork() {
+
+  const name =
+    document.getElementById("name").value;
+
+  const date =
+    document.getElementById("date").value;
+
+  const start =
+    document.getElementById("start").value;
+
+  const end =
+    document.getElementById("end").value;
+
+  const breakTime =
+    Number(
+      document.getElementById("breakTime").value
+    );
+
+
+  if (!name || !date || !start || !end) {
+
+    alert(
+      "직원, 날짜, 출근시간, 퇴근시간을 모두 입력해줘!"
+    );
+
+    return;
+
+  }
+
+
+  let startMin =
+    timeToMinutes(start);
+
+  let endMin =
+    timeToMinutes(end);
+
+
+  if (endMin < startMin) {
+
+    endMin += 1440;
+
+  }
+
+
+  const total =
+    endMin - startMin - breakTime;
+
+
+  if (total <= 0) {
+
+    alert("근무시간을 다시 확인해줘!");
+
+    return;
+
+  }
+
+
+  works.push({
+
+    id: Date.now(),
+
+    name,
+
+    date,
+
+    start,
+
+    end,
+
+    breakTime,
+
+    total
+
+  });
+
+
+  saveWorks();
+
+
+  document.getElementById("name").value = "";
+
+  document.getElementById("start").value = "";
+
+  document.getElementById("end").value = "";
+
+  document.getElementById("breakTime").value = "0";
+
+
+  render();
+
+}
+
+
+function deleteWork(id) {
+
+  if (!confirm("이 기록을 삭제할까요?"))
+    return;
+
+
+  works =
+    works.filter(
+      item => item.id !== id
+    );
+
+
+  saveWorks();
+
+  render();
+
+}
+
+
+function saveWorks() {
+
+  localStorage.setItem(
+    "works",
+    JSON.stringify(works)
+  );
+
+}
+
+
+function clearFilter() {
+
+  document.getElementById(
+    "monthFilter"
+  ).value = "";
+
+  render();
+
+}
+
+
+function render() {
+
+  const workList =
+    document.getElementById("workList");
+
+  const summary =
+    document.getElementById("summary");
+
+  const monthFilter =
+    document.getElementById("monthFilter").value;
+
+
+  let filteredWorks = [...works];
+
+
+  if (monthFilter) {
+
+    filteredWorks =
+      works.filter(
+        item =>
+          item.date.startsWith(monthFilter)
+      );
+
+  }
+
+
+  filteredWorks.sort(
+    (a,b) =>
+      a.date.localeCompare(b.date)
+  );
+
+
+  workList.innerHTML = "";
+
+
+  if (filteredWorks.length === 0) {
+
+    workList.innerHTML = `
+      <tr>
+        <td colspan="7" class="empty">
+          기록이 없어요.
+        </td>
+      </tr>
+    `;
+
+  }
+
+
+  filteredWorks.forEach(item => {
+
+    const tr =
+      document.createElement("tr");
+
+
+    tr.innerHTML = `
+
+      <td>${item.name}</td>
+
+      <td>${item.date}</td>
+
+      <td>${item.start}</td>
+
+      <td>${item.end}</td>
+
+      <td>${item.breakTime}분</td>
+
+      <td>
+        ${formatMinutes(item.total)}
+      </td>
+
+      <td>
+
+        <button
+          class="delete"
+          onclick="deleteWork(${item.id})"
+        >
+          삭제
+        </button>
+
+      </td>
+
+    `;
+
+
+    workList.appendChild(tr);
+
+  });
+
+
+  const totals = {};
+
+
+  filteredWorks.forEach(item => {
+
+    totals[item.name] =
+      (totals[item.name] || 0)
+      + item.total;
+
+  });
+
+
+  summary.innerHTML = "";
+
+
+  const names =
+    Object.keys(totals);
+
+
+  if (names.length === 0) {
+
+    summary.innerHTML = `
+      <div class="empty">
+        아직 기록이 없어요.
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  names.forEach(name => {
+
+    const div =
+      document.createElement("div");
+
+
+    div.className =
+      "summary-item";
+
+
+    div.innerHTML = `
+      <strong>${name}</strong>
+      ·
+      ${formatMinutes(totals[name])}
+    `;
+
+
+    summary.appendChild(div);
+
+  });
+
+}
+
+
+render();
+
+</script>
+
 </body>
 </html>
