@@ -4,22 +4,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>알바 근무시간 정리기</title>
+
   <style>
     * { box-sizing: border-box; }
+
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #f6f7f9;
       color: #222;
     }
+
     .wrap {
       max-width: 760px;
       margin: 0 auto;
       padding: 18px;
     }
-    h1 { margin: 0 0 6px; font-size: 27px; }
-    h2 { margin: 0; font-size: 19px; }
-    .sub { color: #777; margin-bottom: 18px; font-size: 14px; }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 27px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 19px;
+    }
+
+    .sub {
+      color: #777;
+      margin-bottom: 18px;
+      font-size: 14px;
+    }
 
     .card {
       background: #fff;
@@ -29,14 +45,22 @@
       box-shadow: 0 3px 14px rgba(0,0,0,.05);
     }
 
-    details.card { padding: 0; overflow: hidden; }
+    details.card {
+      padding: 0;
+      overflow: hidden;
+    }
+
     details.card > summary {
       list-style: none;
       cursor: pointer;
       padding: 16px;
       font-weight: 800;
     }
-    details.card > summary::-webkit-details-marker { display: none; }
+
+    details.card > summary::-webkit-details-marker {
+      display: none;
+    }
+
     details.card > summary::after {
       content: "보기";
       float: right;
@@ -44,8 +68,14 @@
       color: #777;
       font-weight: 600;
     }
-    details.card[open] > summary::after { content: "접기"; }
-    .details-body { padding: 0 16px 16px; }
+
+    details.card[open] > summary::after {
+      content: "접기";
+    }
+
+    .details-body {
+      padding: 0 16px 16px;
+    }
 
     label {
       display: block;
@@ -53,7 +83,10 @@
       margin: 12px 0 6px;
       font-size: 14px;
     }
-    input, select, button {
+
+    input,
+    select,
+    button {
       width: 100%;
       padding: 11px 12px;
       border-radius: 11px;
@@ -61,6 +94,7 @@
       font-size: 16px;
       background: #fff;
     }
+
     button {
       border: none;
       background: #111;
@@ -68,7 +102,12 @@
       font-weight: 800;
       margin-top: 12px;
     }
-    .secondary { background: #eee; color: #222; }
+
+    .secondary {
+      background: #eee;
+      color: #222;
+    }
+
     .small-btn {
       width: auto;
       margin: 0;
@@ -76,7 +115,11 @@
       font-size: 13px;
       border-radius: 9px;
     }
-    .danger { background: #eee; color: #444; }
+
+    .danger {
+      background: #eee;
+      color: #444;
+    }
 
     .row2 {
       display: grid;
@@ -91,6 +134,7 @@
       align-items: center;
       margin-top: 8px;
     }
+
     .employee-name {
       background: #f4f5f7;
       padding: 10px 12px;
@@ -103,6 +147,7 @@
       gap: 7px;
       margin-top: 10px;
     }
+
     .day-name {
       text-align: center;
       font-size: 12px;
@@ -110,6 +155,7 @@
       color: #777;
       padding: 5px 0;
     }
+
     .day {
       aspect-ratio: 1 / 1;
       padding: 0;
@@ -120,17 +166,21 @@
       color: #222;
       font-weight: 700;
     }
+
     .day.selected {
       background: #111;
       color: #fff;
       border-color: #111;
     }
+
     .day.empty-day {
       border: none;
       background: transparent;
       pointer-events: none;
     }
-    .selected-count, .note {
+
+    .selected-count,
+    .note {
       font-size: 13px;
       color: #777;
       margin-top: 9px;
@@ -143,33 +193,55 @@
       padding: 12px;
       margin-top: 8px;
     }
-    .generated-title { font-weight: 800; margin-bottom: 6px; }
-    .generated-info { font-size: 13px; color: #777; margin-bottom: 6px; }
+
+    .generated-title {
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .generated-info {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 6px;
+    }
 
     .summary-grid {
       display: grid;
       gap: 9px;
       margin-top: 12px;
     }
+
     .person-card {
       background: #f4f5f7;
       border-radius: 13px;
       padding: 12px;
     }
+
     .person-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 10px;
     }
-    .person-name { font-weight: 900; }
-    .person-total { font-size: 13px; color: #666; margin-top: 4px; }
+
+    .person-name {
+      font-weight: 900;
+    }
+
+    .person-total {
+      font-size: 13px;
+      color: #666;
+      margin-top: 4px;
+    }
 
     .record-list {
       display: none;
       margin-top: 10px;
     }
-    .record-list.open { display: block; }
+
+    .record-list.open {
+      display: block;
+    }
 
     .record {
       background: #fff;
@@ -178,25 +250,27 @@
       margin-top: 7px;
       border: 1px solid #e8e8e8;
     }
-    .record-main {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: flex-start;
+
+    .record-date {
+      font-weight: 800;
     }
-    .record-date { font-weight: 800; }
+
     .record-meta {
       font-size: 13px;
       color: #666;
       margin-top: 3px;
       line-height: 1.45;
     }
+
     .record-actions {
       display: flex;
       gap: 6px;
       margin-top: 9px;
     }
-    .record-actions button { flex: 1; }
+
+    .record-actions button {
+      flex: 1;
+    }
 
     .edit-box {
       display: none;
@@ -204,7 +278,10 @@
       padding-top: 10px;
       border-top: 1px solid #eee;
     }
-    .edit-box.open { display: block; }
+
+    .edit-box.open {
+      display: block;
+    }
 
     .empty {
       color: #999;
@@ -212,430 +289,1831 @@
       padding: 12px 0;
       font-size: 14px;
     }
+
     .filter-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
     }
+
+    .schedule-head {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .schedule-head input {
+      flex: 1;
+    }
+
+    .schedule-calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .schedule-weekday {
+      text-align: center;
+      font-size: 12px;
+      color: #777;
+      font-weight: 700;
+      padding: 4px 0;
+    }
+
+    .schedule-day {
+      min-height: 96px;
+      background: #f7f7f8;
+      border-radius: 10px;
+      padding: 7px;
+      font-size: 12px;
+    }
+
+    .schedule-day.empty {
+      background: transparent;
+    }
+
+    .schedule-date {
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .shift-line {
+      background: #fff;
+      border-radius: 7px;
+      padding: 4px 5px;
+      margin-top: 4px;
+      line-height: 1.25;
+      word-break: keep-all;
+    }
+
+    .shift-position {
+      font-weight: 800;
+    }
   </style>
 </head>
+
 <body>
 
 <div class="wrap">
+
   <h1>알바 근무시간 정리기</h1>
-  <div class="sub">원하는 날짜만 골라 근무시간을 기록하고, 직원별 상세내역에서 퇴근시간도 수정할 수 있어요.</div>
+
+  <div class="sub">
+    원하는 날짜만 골라 기록하고, 저장한 뒤에도 포지션과 퇴근시간을 수정할 수 있어요.
+  </div>
+
 
   <details class="card">
+
     <summary>직원 관리</summary>
+
     <div class="details-body">
+
       <label>직원 이름</label>
-      <input id="newEmployee" type="text" placeholder="예: 서윤">
-      <button onclick="addEmployee()">직원 추가</button>
-      <div id="employeeList" style="margin-top:12px;"></div>
+
+      <input
+        id="newEmployee"
+        type="text"
+        placeholder="예: 서윤"
+      >
+
+      <button onclick="addEmployee()">
+        직원 추가
+      </button>
+
+      <div
+        id="employeeList"
+        style="margin-top:12px;"
+      ></div>
+
     </div>
+
   </details>
 
+
   <div class="card">
+
     <h2>근무일 입력</h2>
 
     <label>직원</label>
+
     <select id="employeeSelect">
-      <option value="">직원을 선택하세요</option>
+      <option value="">
+        직원을 선택하세요
+      </option>
     </select>
+
 
     <label>포지션</label>
-    <<select id="position">
-  <option value="오픈">오픈</option>
-  <option value="오전미들">오전미들</option>
-  <option value="오후미들">오후미들</option>
-  <option value="미들">미들</option>
-  <option value="마감">마감</option>
-  <option value="교육">교육</option>
-</select>
+
+    <select id="position">
+
+      <option value="오픈">
+        오픈
+      </option>
+
+      <option value="오전미들">
+        오전미들
+      </option>
+
+      <option value="오후미들">
+        오후미들
+      </option>
+
+      <option value="미들">
+        미들
+      </option>
+
+      <option value="마감">
+        마감
+      </option>
+
+      <option value="교육">
+        교육
+      </option>
+
     </select>
 
+
     <label>월 선택</label>
-    <input id="monthPicker" type="month" onchange="buildCalendar()">
+
+    <input
+      id="monthPicker"
+      type="month"
+      onchange="buildCalendar()"
+    >
+
 
     <div id="calendarWrap"></div>
-    <div id="selectedCount" class="selected-count">선택된 날짜 0일</div>
+
+    <div
+      id="selectedCount"
+      class="selected-count"
+    >
+      선택된 날짜 0일
+    </div>
+
 
     <div class="row2">
+
       <div>
-        <label>기본 출근</label>
-        <input id="defaultStart" type="time">
+
+        <label>
+          기본 출근
+        </label>
+
+        <input
+          id="defaultStart"
+          type="time"
+        >
+
       </div>
+
+
       <div>
-        <label>기본 퇴근</label>
-        <input id="defaultEnd" type="time">
+
+        <label>
+          기본 퇴근
+        </label>
+
+        <input
+          id="defaultEnd"
+          type="time"
+        >
+
       </div>
+
     </div>
 
-    <button onclick="makeSelectedDates()">선택한 날짜 확인</button>
+
+    <button onclick="makeSelectedDates()">
+      선택한 날짜 확인
+    </button>
+
   </div>
 
-  <details id="generatedCard" class="card" style="display:none;" open>
-    <summary>저장 전 퇴근시간 확인/수정</summary>
+
+  <details
+    id="generatedCard"
+    class="card"
+    style="display:none;"
+    open
+  >
+
+    <summary>
+      저장 전 퇴근시간 확인/수정
+    </summary>
+
     <div class="details-body">
-      <div class="note">기본 퇴근시간과 다른 날만 수정한 뒤 한 번에 저장하면 돼요.</div>
+
+      <div class="note">
+        기본 퇴근시간과 다른 날만 수정한 뒤 한 번에 저장하면 돼요.
+      </div>
+
       <div id="generatedList"></div>
-      <button onclick="saveGeneratedWorks()">전체 근무 기록 저장</button>
+
+      <button onclick="saveGeneratedWorks()">
+        전체 근무 기록 저장
+      </button>
+
     </div>
+
   </details>
 
+
   <div class="card">
+
     <h2>근무기록</h2>
 
-    <div class="filter-row" style="margin-top:12px;">
-      <input id="monthFilter" type="month" onchange="renderWorks()">
-      <button class="secondary" style="margin:0;" onclick="clearFilter()">전체 보기</button>
+    <div
+      class="filter-row"
+      style="margin-top:12px;"
+    >
+
+      <input
+        id="monthFilter"
+        type="month"
+        onchange="renderWorks()"
+      >
+
+      <button
+        class="secondary"
+        style="margin:0;"
+        onclick="clearFilter()"
+      >
+        전체 보기
+      </button>
+
     </div>
 
-    <div id="summary" class="summary-grid">
-      <div class="empty">아직 기록이 없어요.</div>
+
+    <div
+      id="summary"
+      class="summary-grid"
+    >
+
+      <div class="empty">
+        아직 기록이 없어요.
+      </div>
+
     </div>
+
   </div>
+
+
+  <div class="card">
+
+    <h2>
+      월간 스케줄 달력
+    </h2>
+
+    <div class="schedule-head">
+
+      <input
+        id="scheduleMonth"
+        type="month"
+        onchange="renderScheduleCalendar()"
+      >
+
+    </div>
+
+
+    <div class="note">
+      위에서 저장한 근무기록을 자동으로 불러와요.
+      시간은 빼고 포지션 + 이름만 표시돼요.
+    </div>
+
+
+    <div id="scheduleCalendar"></div>
+
+  </div>
+
 </div>
 
+
 <script>
-  let employees = JSON.parse(localStorage.getItem("employees") || "[]");
-  let works = JSON.parse(localStorage.getItem("works") || "[]");
+
+  let employees =
+    JSON.parse(
+      localStorage.getItem("employees") || "[]"
+    );
+
+  let works =
+    JSON.parse(
+      localStorage.getItem("works") || "[]"
+    );
+
   let selectedDates = [];
+
   let generatedWorks = [];
 
+
+  const positions = [
+    "오픈",
+    "오전미들",
+    "오후미들",
+    "미들",
+    "마감",
+    "교육"
+  ];
+
+
   function saveEmployees() {
-    localStorage.setItem("employees", JSON.stringify(employees));
+
+    localStorage.setItem(
+      "employees",
+      JSON.stringify(employees)
+    );
+
   }
+
 
   function saveWorks() {
-    localStorage.setItem("works", JSON.stringify(works));
+
+    localStorage.setItem(
+      "works",
+      JSON.stringify(works)
+    );
+
   }
+
 
   function addEmployee() {
-    const input = document.getElementById("newEmployee");
-    const name = input.value.trim();
 
-    if (!name) return alert("직원 이름을 입력해줘!");
-    if (employees.includes(name)) return alert("이미 등록된 직원이에요.");
+    const input =
+      document.getElementById(
+        "newEmployee"
+      );
+
+    const name =
+      input.value.trim();
+
+
+    if (!name) {
+
+      alert(
+        "직원 이름을 입력해줘!"
+      );
+
+      return;
+
+    }
+
+
+    if (
+      employees.includes(name)
+    ) {
+
+      alert(
+        "이미 등록된 직원이에요."
+      );
+
+      return;
+
+    }
+
 
     employees.push(name);
+
     saveEmployees();
+
     input.value = "";
+
     renderEmployees();
+
   }
+
 
   function deleteEmployee(name) {
-    if (!confirm(`${name} 직원을 목록에서 삭제할까요?\n기존 근무 기록은 그대로 남아요.`)) return;
-    employees = employees.filter(item => item !== name);
+
+    if (
+      !confirm(
+        `${name} 직원을 목록에서 삭제할까요?\n기존 근무 기록은 그대로 남아요.`
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    employees =
+      employees.filter(
+        item => item !== name
+      );
+
+
     saveEmployees();
+
     renderEmployees();
+
   }
+
 
   function renderEmployees() {
-    const list = document.getElementById("employeeList");
-    const select = document.getElementById("employeeSelect");
+
+    const list =
+      document.getElementById(
+        "employeeList"
+      );
+
+    const select =
+      document.getElementById(
+        "employeeSelect"
+      );
+
 
     list.innerHTML = "";
-    select.innerHTML = `<option value="">직원을 선택하세요</option>`;
 
-    if (employees.length === 0) {
-      list.innerHTML = `<div class="empty">직원을 먼저 추가해주세요.</div>`;
+    select.innerHTML =
+      `<option value="">직원을 선택하세요</option>`;
+
+
+    if (
+      employees.length === 0
+    ) {
+
+      list.innerHTML =
+        `<div class="empty">
+          직원을 먼저 추가해주세요.
+        </div>`;
+
     }
+
 
     employees.forEach(name => {
-      const row = document.createElement("div");
-      row.className = "employee-row";
+
+      const row =
+        document.createElement(
+          "div"
+        );
+
+
+      row.className =
+        "employee-row";
+
+
       row.innerHTML = `
-        <div class="employee-name">${escapeHtml(name)}</div>
-        <button class="small-btn danger" onclick="deleteEmployee(${JSON.stringify(name)})">삭제</button>
+
+        <div class="employee-name">
+          ${escapeHtml(name)}
+        </div>
+
+        <button
+          class="small-btn danger"
+          onclick='deleteEmployee(${JSON.stringify(name)})'
+        >
+          삭제
+        </button>
+
       `;
+
+
       list.appendChild(row);
 
-      const option = document.createElement("option");
+
+      const option =
+        document.createElement(
+          "option"
+        );
+
+
       option.value = name;
+
       option.textContent = name;
+
       select.appendChild(option);
+
     });
+
   }
+
 
   function buildCalendar() {
-    const monthValue = document.getElementById("monthPicker").value;
-    const wrap = document.getElementById("calendarWrap");
+
+    const monthValue =
+      document.getElementById(
+        "monthPicker"
+      ).value;
+
+    const wrap =
+      document.getElementById(
+        "calendarWrap"
+      );
+
+
     selectedDates = [];
+
     updateSelectedCount();
+
 
     if (!monthValue) {
+
       wrap.innerHTML = "";
+
       return;
+
     }
 
-    const [year, month] = monthValue.split("-").map(Number);
-    const firstDay = new Date(year, month - 1, 1).getDay();
-    const lastDate = new Date(year, month, 0).getDate();
+
+    const [year, month] =
+      monthValue
+        .split("-")
+        .map(Number);
+
+
+    const firstDay =
+      new Date(
+        year,
+        month - 1,
+        1
+      ).getDay();
+
+
+    const lastDate =
+      new Date(
+        year,
+        month,
+        0
+      ).getDate();
+
 
     let html = `
+
       <div class="calendar">
-        <div class="day-name">일</div>
-        <div class="day-name">월</div>
-        <div class="day-name">화</div>
-        <div class="day-name">수</div>
-        <div class="day-name">목</div>
-        <div class="day-name">금</div>
-        <div class="day-name">토</div>
+
+        <div class="day-name">
+          일
+        </div>
+
+        <div class="day-name">
+          월
+        </div>
+
+        <div class="day-name">
+          화
+        </div>
+
+        <div class="day-name">
+          수
+        </div>
+
+        <div class="day-name">
+          목
+        </div>
+
+        <div class="day-name">
+          금
+        </div>
+
+        <div class="day-name">
+          토
+        </div>
+
     `;
 
-    for (let i = 0; i < firstDay; i++) {
-      html += `<button class="day empty-day" type="button"></button>`;
+
+    for (
+      let i = 0;
+      i < firstDay;
+      i++
+    ) {
+
+      html += `
+        <button
+          class="day empty-day"
+          type="button"
+        ></button>
+      `;
+
     }
 
-    for (let day = 1; day <= lastDate; day++) {
-      const dateString = `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+
+    for (
+      let day = 1;
+      day <= lastDate;
+      day++
+    ) {
+
+      const dateString =
+        `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+
+
       html += `
-        <button type="button" class="day" id="day-${day}" onclick="toggleDate('${dateString}', ${day})">
+
+        <button
+          type="button"
+          class="day"
+          id="day-${day}"
+          onclick="toggleDate('${dateString}', ${day})"
+        >
           ${day}
         </button>
+
       `;
+
     }
+
 
     html += `</div>`;
+
+
     wrap.innerHTML = html;
+
   }
 
-  function toggleDate(dateString, day) {
-    const btn = document.getElementById(`day-${day}`);
 
-    if (selectedDates.includes(dateString)) {
-      selectedDates = selectedDates.filter(d => d !== dateString);
-      btn.classList.remove("selected");
+  function toggleDate(
+    dateString,
+    day
+  ) {
+
+    const btn =
+      document.getElementById(
+        `day-${day}`
+      );
+
+
+    if (
+      selectedDates.includes(
+        dateString
+      )
+    ) {
+
+      selectedDates =
+        selectedDates.filter(
+          d => d !== dateString
+        );
+
+
+      btn.classList.remove(
+        "selected"
+      );
+
     } else {
-      selectedDates.push(dateString);
+
+      selectedDates.push(
+        dateString
+      );
+
+
       selectedDates.sort();
-      btn.classList.add("selected");
+
+
+      btn.classList.add(
+        "selected"
+      );
+
     }
+
 
     updateSelectedCount();
+
   }
+
 
   function updateSelectedCount() {
-    document.getElementById("selectedCount").textContent = `선택된 날짜 ${selectedDates.length}일`;
+
+    document.getElementById(
+      "selectedCount"
+    ).textContent =
+      `선택된 날짜 ${selectedDates.length}일`;
+
   }
+
 
   function makeSelectedDates() {
-    const employee = document.getElementById("employeeSelect").value;
-    const position = document.getElementById("position").value;
-    const defaultStart = document.getElementById("defaultStart").value;
-    const defaultEnd = document.getElementById("defaultEnd").value;
 
-    if (!employee) return alert("직원을 선택해줘!");
-    if (selectedDates.length === 0) return alert("달력에서 근무 날짜를 선택해줘!");
-    if (!defaultStart || !defaultEnd) return alert("기본 출근시간과 퇴근시간을 입력해줘!");
+    const employee =
+      document.getElementById(
+        "employeeSelect"
+      ).value;
 
-    generatedWorks = selectedDates.map(date => ({
-      date,
-      employee,
-      position,
-      start: defaultStart,
-      end: defaultEnd
-    }));
+    const position =
+      document.getElementById(
+        "position"
+      ).value;
+
+    const defaultStart =
+      document.getElementById(
+        "defaultStart"
+      ).value;
+
+    const defaultEnd =
+      document.getElementById(
+        "defaultEnd"
+      ).value;
+
+
+    if (!employee) {
+
+      alert(
+        "직원을 선택해줘!"
+      );
+
+      return;
+
+    }
+
+
+    if (
+      selectedDates.length === 0
+    ) {
+
+      alert(
+        "달력에서 근무 날짜를 선택해줘!"
+      );
+
+      return;
+
+    }
+
+
+    if (
+      !defaultStart ||
+      !defaultEnd
+    ) {
+
+      alert(
+        "기본 출근시간과 퇴근시간을 입력해줘!"
+      );
+
+      return;
+
+    }
+
+
+    generatedWorks =
+      selectedDates.map(
+        date => ({
+
+          date,
+
+          employee,
+
+          position,
+
+          start:
+            defaultStart,
+
+          end:
+            defaultEnd
+
+        })
+      );
+
 
     renderGenerated();
+
   }
+
 
   function renderGenerated() {
-    const card = document.getElementById("generatedCard");
-    const list = document.getElementById("generatedList");
 
-    card.style.display = "block";
+    const card =
+      document.getElementById(
+        "generatedCard"
+      );
+
+    const list =
+      document.getElementById(
+        "generatedList"
+      );
+
+
+    card.style.display =
+      "block";
+
     card.open = true;
+
     list.innerHTML = "";
 
-    generatedWorks.forEach((item, index) => {
-      const row = document.createElement("div");
-      row.className = "generated-row";
-      row.innerHTML = `
-        <div class="generated-title">${formatDate(item.date)}</div>
-        <div class="generated-info">${escapeHtml(item.employee)} · ${escapeHtml(item.position)} · 출근 ${item.start}</div>
-        <input type="time" value="${item.end}" onchange="changeGeneratedEnd(${index}, this.value)">
-      `;
-      list.appendChild(row);
-    });
+
+    generatedWorks.forEach(
+      (item, index) => {
+
+        const row =
+          document.createElement(
+            "div"
+          );
+
+
+        row.className =
+          "generated-row";
+
+
+        row.innerHTML = `
+
+          <div class="generated-title">
+            ${formatDate(item.date)}
+          </div>
+
+          <div class="generated-info">
+            ${escapeHtml(item.employee)}
+            ·
+            ${escapeHtml(item.position)}
+            ·
+            출근 ${item.start}
+          </div>
+
+          <input
+            type="time"
+            value="${item.end}"
+            onchange="changeGeneratedEnd(${index}, this.value)"
+          >
+
+        `;
+
+
+        list.appendChild(row);
+
+      }
+    );
+
   }
 
-  function changeGeneratedEnd(index, value) {
-    generatedWorks[index].end = value;
+
+  function changeGeneratedEnd(
+    index,
+    value
+  ) {
+
+    generatedWorks[index].end =
+      value;
+
   }
+
 
   function saveGeneratedWorks() {
-    if (generatedWorks.length === 0) return alert("먼저 날짜를 만들어줘!");
 
-    generatedWorks.forEach(item => {
-      works.push({
-        id: Date.now() + Math.floor(Math.random() * 100000),
-        name: item.employee,
-        date: item.date,
-        position: item.position,
-        start: item.start,
-        end: item.end,
-        total: calculateWorkMinutes(item.start, item.end)
-      });
-    });
+    if (
+      generatedWorks.length === 0
+    ) {
+
+      alert(
+        "먼저 날짜를 만들어줘!"
+      );
+
+      return;
+
+    }
+
+
+    generatedWorks.forEach(
+      item => {
+
+        works.push({
+
+          id:
+            Date.now()
+            +
+            Math.floor(
+              Math.random()
+              *
+              100000
+            ),
+
+          name:
+            item.employee,
+
+          date:
+            item.date,
+
+          position:
+            item.position,
+
+          start:
+            item.start,
+
+          end:
+            item.end,
+
+          total:
+            calculateWorkMinutes(
+              item.start,
+              item.end
+            )
+
+        });
+
+      }
+    );
+
 
     saveWorks();
+
+
     generatedWorks = [];
-    document.getElementById("generatedCard").style.display = "none";
 
-    alert("근무 기록이 저장됐어요!");
+
+    document.getElementById(
+      "generatedCard"
+    ).style.display =
+      "none";
+
+
+    alert(
+      "근무 기록이 저장됐어요!"
+    );
+
+
     renderWorks();
+
+    renderScheduleCalendar();
+
   }
 
-  function calculateWorkMinutes(start, end) {
-    const [sh, sm] = start.split(":").map(Number);
-    const [eh, em] = end.split(":").map(Number);
 
-    let startMin = sh * 60 + sm;
-    let endMin = eh * 60 + em;
+  function calculateWorkMinutes(
+    start,
+    end
+  ) {
 
-    if (endMin < startMin) endMin += 1440;
-    return endMin - startMin;
+    const [sh, sm] =
+      start
+        .split(":")
+        .map(Number);
+
+
+    const [eh, em] =
+      end
+        .split(":")
+        .map(Number);
+
+
+    let startMin =
+      sh * 60 + sm;
+
+
+    let endMin =
+      eh * 60 + em;
+
+
+    if (
+      endMin < startMin
+    ) {
+
+      endMin += 1440;
+
+    }
+
+
+    return (
+      endMin - startMin
+    );
+
   }
 
-  function updateEndTime(id) {
-    const input = document.getElementById(`edit-end-${id}`);
-    if (!input || !input.value) return alert("퇴근시간을 입력해줘!");
 
-    const item = works.find(w => String(w.id) === String(id));
-    if (!item) return;
+  function updateRecord(id) {
 
-    item.end = input.value;
-    item.total = calculateWorkMinutes(item.start, item.end);
+    const endInput =
+      document.getElementById(
+        `edit-end-${id}`
+      );
+
+    const positionInput =
+      document.getElementById(
+        `edit-position-${id}`
+      );
+
+
+    if (
+      !endInput ||
+      !endInput.value
+    ) {
+
+      alert(
+        "퇴근시간을 입력해줘!"
+      );
+
+      return;
+
+    }
+
+
+    const item =
+      works.find(
+        w =>
+          String(w.id)
+          ===
+          String(id)
+      );
+
+
+    if (!item) {
+
+      return;
+
+    }
+
+
+    item.end =
+      endInput.value;
+
+
+    item.position =
+      positionInput.value;
+
+
+    item.total =
+      calculateWorkMinutes(
+        item.start,
+        item.end
+      );
+
 
     saveWorks();
+
     renderWorks();
-    alert("퇴근시간이 수정됐어요!");
+
+    renderScheduleCalendar();
+
+
+    alert(
+      "근무기록이 수정됐어요!"
+    );
+
   }
+
 
   function toggleEdit(id) {
-    const box = document.getElementById(`edit-box-${id}`);
-    if (box) box.classList.toggle("open");
+
+    const box =
+      document.getElementById(
+        `edit-box-${id}`
+      );
+
+
+    if (box) {
+
+      box.classList.toggle(
+        "open"
+      );
+
+    }
+
   }
 
-  function togglePerson(nameKey) {
-    const box = document.getElementById(`records-${nameKey}`);
-    if (box) box.classList.toggle("open");
+
+  function togglePerson(
+    nameKey
+  ) {
+
+    const box =
+      document.getElementById(
+        `records-${nameKey}`
+      );
+
+
+    if (box) {
+
+      box.classList.toggle(
+        "open"
+      );
+
+    }
+
   }
+
 
   function deleteWork(id) {
-    if (!confirm("이 근무 기록을 삭제할까요?")) return;
-    works = works.filter(item => String(item.id) !== String(id));
+
+    if (
+      !confirm(
+        "이 근무 기록을 삭제할까요?"
+      )
+    ) {
+
+      return;
+
+    }
+
+
+    works =
+      works.filter(
+        item =>
+          String(item.id)
+          !==
+          String(id)
+      );
+
+
     saveWorks();
+
     renderWorks();
+
+    renderScheduleCalendar();
+
   }
+
 
   function clearFilter() {
-    document.getElementById("monthFilter").value = "";
+
+    document.getElementById(
+      "monthFilter"
+    ).value = "";
+
+
     renderWorks();
+
   }
 
+
   function renderWorks() {
-    const summary = document.getElementById("summary");
-    const monthFilter = document.getElementById("monthFilter").value;
 
-    let filtered = [...works];
-    if (monthFilter) filtered = filtered.filter(item => item.date.startsWith(monthFilter));
+    const summary =
+      document.getElementById(
+        "summary"
+      );
 
-    filtered.sort((a,b) => a.date.localeCompare(b.date));
+    const monthFilter =
+      document.getElementById(
+        "monthFilter"
+      ).value;
 
-    if (filtered.length === 0) {
-      summary.innerHTML = `<div class="empty">아직 기록이 없어요.</div>`;
-      return;
+
+    let filtered =
+      [...works];
+
+
+    if (monthFilter) {
+
+      filtered =
+        filtered.filter(
+          item =>
+            item.date.startsWith(
+              monthFilter
+            )
+        );
+
     }
+
+
+    filtered.sort(
+      (a, b) =>
+        a.date.localeCompare(
+          b.date
+        )
+    );
+
+
+    if (
+      filtered.length === 0
+    ) {
+
+      summary.innerHTML = `
+
+        <div class="empty">
+          아직 기록이 없어요.
+        </div>
+
+      `;
+
+      return;
+
+    }
+
 
     const grouped = {};
 
-    filtered.forEach(item => {
-      if (!grouped[item.name]) grouped[item.name] = { total: 0, items: [] };
-      grouped[item.name].total += Number(item.total || 0);
-      grouped[item.name].items.push(item);
-    });
+
+    filtered.forEach(
+      item => {
+
+        if (
+          !grouped[item.name]
+        ) {
+
+          grouped[item.name] = {
+
+            total: 0,
+
+            items: []
+
+          };
+
+        }
+
+
+        grouped[item.name].total +=
+          Number(
+            item.total || 0
+          );
+
+
+        grouped[item.name].items.push(
+          item
+        );
+
+      }
+    );
+
 
     summary.innerHTML = "";
 
-    Object.keys(grouped).sort().forEach((name, idx) => {
-      const group = grouped[name];
-      const nameKey = `p${idx}`;
 
-      const person = document.createElement("div");
-      person.className = "person-card";
+    Object
+      .keys(grouped)
+      .sort()
+      .forEach(
+        (name, idx) => {
 
-      const recordsHtml = group.items.map(item => `
-        <div class="record">
-          <div class="record-main">
-            <div>
-              <div class="record-date">${formatDate(item.date)}</div>
-              <div class="record-meta">
-                ${escapeHtml(item.position || "-")} · ${item.start} → ${item.end}<br>
-                ${formatMinutes(item.total)}
+          const group =
+            grouped[name];
+
+
+          const nameKey =
+            `p${idx}`;
+
+
+          const person =
+            document.createElement(
+              "div"
+            );
+
+
+          person.className =
+            "person-card";
+
+
+          const recordsHtml =
+            group.items.map(
+              item => {
+
+
+                const positionOptions =
+                  positions.map(
+                    p => `
+
+                      <option
+                        value="${p}"
+                        ${
+                          item.position === p
+                          ?
+                          "selected"
+                          :
+                          ""
+                        }
+                      >
+                        ${p}
+                      </option>
+
+                    `
+                  ).join("");
+
+
+                return `
+
+                  <div class="record">
+
+                    <div class="record-date">
+                      ${formatDate(item.date)}
+                    </div>
+
+                    <div class="record-meta">
+
+                      ${escapeHtml(item.position || "-")}
+                      ·
+                      ${item.start}
+                      →
+                      ${item.end}
+
+                      <br>
+
+                      ${formatMinutes(item.total)}
+
+                    </div>
+
+
+                    <div class="record-actions">
+
+                      <button
+                        class="small-btn secondary"
+                        onclick="toggleEdit(${item.id})"
+                      >
+                        기록 수정
+                      </button>
+
+                      <button
+                        class="small-btn danger"
+                        onclick="deleteWork(${item.id})"
+                      >
+                        삭제
+                      </button>
+
+                    </div>
+
+
+                    <div
+                      class="edit-box"
+                      id="edit-box-${item.id}"
+                    >
+
+                      <label>
+                        포지션
+                      </label>
+
+                      <select
+                        id="edit-position-${item.id}"
+                      >
+                        ${positionOptions}
+                      </select>
+
+
+                      <label>
+                        퇴근시간
+                      </label>
+
+                      <input
+                        id="edit-end-${item.id}"
+                        type="time"
+                        value="${item.end}"
+                      >
+
+
+                      <button
+                        onclick="updateRecord(${item.id})"
+                      >
+                        수정 저장
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                `;
+
+              }
+            ).join("");
+
+
+          person.innerHTML = `
+
+            <div class="person-top">
+
+              <div>
+
+                <div class="person-name">
+                  ${escapeHtml(name)}
+                </div>
+
+                <div class="person-total">
+
+                  ${group.items.length}일
+
+                  ·
+
+                  총
+                  ${formatMinutes(
+                    group.total
+                  )}
+
+                </div>
+
               </div>
+
+
+              <button
+                class="small-btn secondary"
+                onclick="togglePerson('${nameKey}')"
+              >
+                상세보기
+              </button>
+
             </div>
-          </div>
 
-          <div class="record-actions">
-            <button class="small-btn secondary" onclick="toggleEdit(${item.id})">퇴근 수정</button>
-            <button class="small-btn danger" onclick="deleteWork(${item.id})">삭제</button>
-          </div>
 
-          <div class="edit-box" id="edit-box-${item.id}">
-            <label>새 퇴근시간</label>
-            <input id="edit-end-${item.id}" type="time" value="${item.end}">
-            <button onclick="updateEndTime(${item.id})">수정 저장</button>
-          </div>
+            <div
+              class="record-list"
+              id="records-${nameKey}"
+            >
+              ${recordsHtml}
+            </div>
+
+          `;
+
+
+          summary.appendChild(
+            person
+          );
+
+        }
+      );
+
+  }
+
+
+  function formatMinutes(
+    minutes
+  ) {
+
+    minutes =
+      Number(
+        minutes || 0
+      );
+
+
+    const h =
+      Math.floor(
+        minutes / 60
+      );
+
+
+    const m =
+      minutes % 60;
+
+
+    if (
+      h &&
+      m
+    ) {
+
+      return `${h}시간 ${m}분`;
+
+    }
+
+
+    if (h) {
+
+      return `${h}시간`;
+
+    }
+
+
+    return `${m}분`;
+
+  }
+
+
+  function formatDate(
+    date
+  ) {
+
+    const parts =
+      date.split("-");
+
+
+    return (
+      `${Number(parts[1])}월 ${Number(parts[2])}일`
+    );
+
+  }
+
+
+  function escapeHtml(
+    value
+  ) {
+
+    return String(value)
+
+      .replaceAll(
+        "&",
+        "&amp;"
+      )
+
+      .replaceAll(
+        "<",
+        "&lt;"
+      )
+
+      .replaceAll(
+        ">",
+        "&gt;"
+      )
+
+      .replaceAll(
+        '"',
+        "&quot;"
+      )
+
+      .replaceAll(
+        "'",
+        "&#039;"
+      );
+
+  }
+
+
+  function getDefaultScheduleMonth() {
+
+    const scheduleInput =
+      document.getElementById(
+        "scheduleMonth"
+      );
+
+
+    if (!scheduleInput) {
+
+      return;
+
+    }
+
+
+    if (
+      !scheduleInput.value
+    ) {
+
+      const monthFilter =
+        document.getElementById(
+          "monthFilter"
+        );
+
+
+      if (
+        monthFilter &&
+        monthFilter.value
+      ) {
+
+        scheduleInput.value =
+          monthFilter.value;
+
+      } else {
+
+        const now =
+          new Date();
+
+
+        scheduleInput.value =
+          `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+
+      }
+
+    }
+
+  }
+
+
+  function renderScheduleCalendar() {
+
+    const wrap =
+      document.getElementById(
+        "scheduleCalendar"
+      );
+
+    const monthInput =
+      document.getElementById(
+        "scheduleMonth"
+      );
+
+
+    if (
+      !wrap ||
+      !monthInput
+    ) {
+
+      return;
+
+    }
+
+
+    getDefaultScheduleMonth();
+
+
+    const monthValue =
+      monthInput.value;
+
+
+    if (!monthValue) {
+
+      wrap.innerHTML = "";
+
+      return;
+
+    }
+
+
+    const [year, month] =
+      monthValue
+        .split("-")
+        .map(Number);
+
+
+    const firstDay =
+      new Date(
+        year,
+        month - 1,
+        1
+      ).getDay();
+
+
+    const lastDate =
+      new Date(
+        year,
+        month,
+        0
+      ).getDate();
+
+
+    const records =
+      works
+
+        .filter(
+          item =>
+            item.date &&
+            item.date.startsWith(
+              monthValue
+            )
+        )
+
+        .sort(
+          (a, b) => {
+
+            if (
+              a.date !== b.date
+            ) {
+
+              return (
+                a.date.localeCompare(
+                  b.date
+                )
+              );
+
+            }
+
+
+            return (
+              positionOrder(
+                a.position
+              )
+              -
+              positionOrder(
+                b.position
+              )
+            );
+
+          }
+        );
+
+
+    const byDate = {};
+
+
+    records.forEach(
+      item => {
+
+        if (
+          !byDate[item.date]
+        ) {
+
+          byDate[item.date] = [];
+
+        }
+
+
+        byDate[item.date].push(
+          item
+        );
+
+      }
+    );
+
+
+    let out = `
+
+      <div class="schedule-calendar">
+
+        <div class="schedule-weekday">
+          일
         </div>
-      `).join("");
 
-      person.innerHTML = `
-        <div class="person-top">
-          <div>
-            <div class="person-name">${escapeHtml(name)}</div>
-            <div class="person-total">${group.items.length}일 · 총 ${formatMinutes(group.total)}</div>
-          </div>
-          <button class="small-btn secondary" onclick="togglePerson('${nameKey}')">상세보기</button>
+        <div class="schedule-weekday">
+          월
         </div>
 
-        <div class="record-list" id="records-${nameKey}">
-          ${recordsHtml}
+        <div class="schedule-weekday">
+          화
         </div>
+
+        <div class="schedule-weekday">
+          수
+        </div>
+
+        <div class="schedule-weekday">
+          목
+        </div>
+
+        <div class="schedule-weekday">
+          금
+        </div>
+
+        <div class="schedule-weekday">
+          토
+        </div>
+
+    `;
+
+
+    for (
+      let i = 0;
+      i < firstDay;
+      i++
+    ) {
+
+      out += `
+        <div class="schedule-day empty"></div>
       `;
 
-      summary.appendChild(person);
-    });
+    }
+
+
+    for (
+      let day = 1;
+      day <= lastDate;
+      day++
+    ) {
+
+      const dateString =
+        `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+
+
+      const dayRecords =
+        byDate[dateString] || [];
+
+
+      const lines =
+        dayRecords.map(
+          item => `
+
+            <div class="shift-line">
+
+              <span class="shift-position">
+                ${escapeHtml(item.position || "-")}
+              </span>
+
+              ${escapeHtml(item.name || "")}
+
+            </div>
+
+          `
+        ).join("");
+
+
+      out += `
+
+        <div class="schedule-day">
+
+          <div class="schedule-date">
+            ${day}
+          </div>
+
+          ${lines}
+
+        </div>
+
+      `;
+
+    }
+
+
+    out += `</div>`;
+
+
+    wrap.innerHTML = out;
+
   }
 
-  function formatMinutes(minutes) {
-    minutes = Number(minutes || 0);
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
 
-    if (h && m) return `${h}시간 ${m}분`;
-    if (h) return `${h}시간`;
-    return `${m}분`;
+  function positionOrder(
+    position
+  ) {
+
+    const order = {
+
+      "오픈": 1,
+
+      "오전미들": 2,
+
+      "미들": 3,
+
+      "오후미들": 4,
+
+      "마감": 5,
+
+      "교육": 6
+
+    };
+
+
+    return (
+      order[position]
+      ||
+      99
+    );
+
   }
 
-  function formatDate(date) {
-    const parts = date.split("-");
-    return `${Number(parts[1])}월 ${Number(parts[2])}일`;
-  }
-
-  function escapeHtml(value) {
-    return String(value)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
-  }
 
   renderEmployees();
+
   renderWorks();
+
+  getDefaultScheduleMonth();
+
+  renderScheduleCalendar();
+
 </script>
 
 </body>
