@@ -7,75 +7,363 @@
 
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f6f7f9;color:#222}
+
+body{
+  margin:0;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:#f6f7f9;
+  color:#222
+}
+
 body.lock{overflow:hidden}
-.wrap{max-width:760px;margin:auto;padding:18px}
-h1{font-size:27px;margin:0 0 6px}
-h2{font-size:19px;margin:0}
-.sub,.note{color:#777;font-size:13px;line-height:1.5}
+
+.wrap{
+  max-width:760px;
+  margin:auto;
+  padding:18px
+}
+
+h1{
+  font-size:27px;
+  margin:0 0 6px
+}
+
+h2{
+  font-size:19px;
+  margin:0
+}
+
+.sub,.note{
+  color:#777;
+  font-size:13px;
+  line-height:1.5
+}
+
 .sub{margin-bottom:18px}
 
-.card{background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 3px 14px #0000000d}
-details.card{padding:0;overflow:hidden}
-details.card summary{padding:16px;font-weight:800;cursor:pointer;list-style:none}
-details.card summary:after{content:"보기";float:right;color:#777;font-size:13px}
-details[open] summary:after{content:"접기"}
-.inner{padding:0 16px 16px}
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:14px;
+  box-shadow:0 3px 14px #0000000d
+}
 
-label{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
-input,select,button{width:100%;padding:11px 12px;border:1px solid #ddd;border-radius:11px;font-size:16px;background:#fff}
-button{border:0;background:#111;color:#fff;font-weight:800;margin-top:12px}
-.secondary,.danger{background:#eee;color:#222}
-.small{width:auto;margin:0;padding:8px 10px;font-size:13px}
+details.card{
+  padding:0;
+  overflow:hidden
+}
 
-.row2,.filter{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.empRow{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:8px}
-.empName,.person{background:#f4f5f7;border-radius:11px;padding:11px}
+details.card summary{
+  padding:16px;
+  font-weight:800;
+  cursor:pointer;
+  list-style:none
+}
 
-.calendar,.schedule{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:10px}
-.week{text-align:center;font-size:12px;color:#777;font-weight:700;padding:4px}
-.day{aspect-ratio:1;border:1px solid #ddd;background:#fff;color:#222;margin:0;padding:0;border-radius:10px;font-weight:700}
-.day.sel{background:#111;color:#fff}
-.blank{border:0;background:transparent}
-.count{font-size:13px;color:#777;margin-top:8px}
+details.card summary:after{
+  content:"보기";
+  float:right;
+  color:#777;
+  font-size:13px
+}
 
-.gen{background:#f7f7f8;border-radius:12px;padding:12px;margin-top:8px}
-.gen b{display:block;margin-bottom:5px}
+details[open] summary:after{
+  content:"접기"
+}
 
-.person{margin-top:9px}
-.personTop{display:flex;justify-content:space-between;align-items:center;gap:10px}
-.total{font-size:13px;color:#666;margin-top:4px}
-.records,.edit{display:none}
-.records.open,.edit.open{display:block}
-.record{background:#fff;border:1px solid #e8e8e8;border-radius:11px;padding:10px;margin-top:8px}
-.meta{font-size:13px;color:#666;line-height:1.5;margin-top:3px}
-.actions{display:flex;gap:6px;margin-top:9px}
-.actions button{flex:1}
-.empty{text-align:center;color:#999;font-size:14px;padding:12px}
+.inner{
+  padding:0 16px 16px
+}
 
-.launch{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.launch button{width:auto;margin:0;padding:10px 14px}
+label{
+  display:block;
+  font-weight:700;
+  font-size:14px;
+  margin:12px 0 6px
+}
 
-.modal{display:none;position:fixed;inset:0;z-index:9999;background:#f6f7f9;overflow:auto}
-.modal.open{display:block}
-.modalInner{max-width:760px;margin:auto;padding:14px;min-height:100vh}
-.modalTop{position:sticky;top:0;z-index:20;background:#f6f7f9f2;backdrop-filter:blur(12px);padding:8px 0 12px}
-.modalTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
-.modalTitle h2{font-size:24px}
-.close{width:auto;margin:0;border-radius:999px;padding:10px 15px}
+input,select,button{
+  width:100%;
+  padding:11px 12px;
+  border:1px solid #ddd;
+  border-radius:11px;
+  font-size:16px;
+  background:#fff
+}
 
-.schedule{gap:7px;margin-top:14px}
-.scheduleDay{min-height:112px;background:#fff;border:1px solid #eee;border-radius:10px;padding:6px;font-size:11px}
-.scheduleDate{font-weight:900;margin-bottom:4px}
-.shift{background:#f7f7f8;border-radius:6px;padding:4px 5px;margin-top:4px;display:flex;gap:4px;align-items:center;white-space:nowrap;overflow:hidden;text-align:left}
-.pos{font-weight:800;flex:none}
-.nm{font-weight:400;overflow:hidden;text-overflow:ellipsis;color:#444}
+button{
+  border:0;
+  background:#111;
+  color:#fff;
+  font-weight:800;
+  margin-top:12px
+}
+
+.secondary,.danger{
+  background:#eee;
+  color:#222
+}
+
+.small{
+  width:auto;
+  margin:0;
+  padding:8px 10px;
+  font-size:13px
+}
+
+.row2,.filter{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px
+}
+
+.empRow{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:8px;
+  align-items:center;
+  margin-top:8px
+}
+
+.empName,.person{
+  background:#f4f5f7;
+  border-radius:11px;
+  padding:11px
+}
+
+.calendar,.schedule{
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:6px;
+  margin-top:10px
+}
+
+.week{
+  text-align:center;
+  font-size:12px;
+  color:#777;
+  font-weight:700;
+  padding:4px
+}
+
+.day{
+  aspect-ratio:1;
+  border:1px solid #ddd;
+  background:#fff;
+  color:#222;
+  margin:0;
+  padding:0;
+  border-radius:10px;
+  font-weight:700
+}
+
+.day.sel{
+  background:#111;
+  color:#fff
+}
+
+.blank{
+  border:0;
+  background:transparent
+}
+
+.count{
+  font-size:13px;
+  color:#777;
+  margin-top:8px
+}
+
+.gen{
+  background:#f7f7f8;
+  border-radius:12px;
+  padding:12px;
+  margin-top:8px
+}
+
+.person{
+  margin-top:9px
+}
+
+.personTop{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px
+}
+
+.total{
+  font-size:13px;
+  color:#666;
+  margin-top:4px
+}
+
+.records,.edit{
+  display:none
+}
+
+.records.open,.edit.open{
+  display:block
+}
+
+.record{
+  background:#fff;
+  border:1px solid #e8e8e8;
+  border-radius:11px;
+  padding:10px;
+  margin-top:8px
+}
+
+.meta{
+  font-size:13px;
+  color:#666;
+  line-height:1.5;
+  margin-top:3px
+}
+
+.actions{
+  display:flex;
+  gap:6px;
+  margin-top:9px
+}
+
+.actions button{
+  flex:1
+}
+
+.empty{
+  text-align:center;
+  color:#999;
+  font-size:14px;
+  padding:12px
+}
+
+.launch{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px
+}
+
+.launch button{
+  width:auto;
+  margin:0;
+  padding:10px 14px
+}
+
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  background:#f6f7f9;
+  overflow:auto
+}
+
+.modal.open{
+  display:block
+}
+
+.modalInner{
+  max-width:760px;
+  margin:auto;
+  padding:14px;
+  min-height:100vh
+}
+
+.modalTop{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:#f6f7f9f2;
+  backdrop-filter:blur(12px);
+  padding:8px 0 12px
+}
+
+.modalTitle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:10px
+}
+
+.modalTitle h2{
+  font-size:24px
+}
+
+.modalButtons{
+  display:flex;
+  gap:8px
+}
+
+.modalButtons button{
+  width:auto;
+  margin:0;
+  border-radius:999px;
+  padding:10px 14px
+}
+
+.saveImg{
+  background:#fff;
+  color:#111;
+  border:1px solid #ddd
+}
+
+.close{
+  background:#111
+}
+
+.schedule{
+  gap:7px;
+  margin-top:14px
+}
+
+.scheduleDay{
+  min-height:112px;
+  background:#fff;
+  border:1px solid #eee;
+  border-radius:10px;
+  padding:6px;
+  font-size:11px
+}
+
+.scheduleDate{
+  font-weight:900;
+  margin-bottom:4px
+}
+
+.shift{
+  background:#f7f7f8;
+  border-radius:6px;
+  padding:4px 5px;
+  margin-top:4px;
+  display:flex;
+  gap:4px;
+  align-items:center;
+  white-space:nowrap;
+  overflow:hidden;
+  text-align:left
+}
+
+.pos{
+  font-weight:800;
+  flex:none
+}
+
+.nm{
+  font-weight:400;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  color:#444
+}
 
 @media(max-width:520px){
-.modalInner{padding:10px}
-.schedule{gap:4px}
-.scheduleDay{min-height:104px;padding:5px}
-.shift{font-size:10px;padding:4px;gap:3px}
+  .modalInner{padding:10px}
+  .schedule{gap:4px}
+  .scheduleDay{min-height:104px;padding:5px}
+  .shift{font-size:10px;padding:4px;gap:3px}
+  .modalButtons button{padding:9px 12px;font-size:14px}
 }
 </style>
 </head>
@@ -89,717 +377,813 @@ button{border:0;background:#111;color:#fff;font-weight:800;margin-top:12px}
 
 <details class="card">
 <summary>직원 관리</summary>
+
 <div class="inner">
+
 <label>직원 이름</label>
-<input id="newEmp" placeholder="예: 서윤">
-<button onclick="addEmp()">직원 추가</button>
+
+<input
+id="newEmp"
+placeholder="예: 서윤"
+>
+
+<button onclick="addEmp()">
+직원 추가
+</button>
+
 <div id="empList"></div>
+
 </div>
 </details>
+
 
 <div class="card">
 
 <h2>근무일 입력</h2>
 
 <label>직원</label>
+
 <select id="emp"></select>
 
+
 <label>포지션</label>
+
 <select id="pos">
+
 <option>오픈</option>
+
 <option>오전미들</option>
+
 <option>오후미들</option>
+
 <option>미들</option>
+
 <option>마감</option>
+
 <option>교육</option>
+
 </select>
 
+
 <label>월 선택</label>
-<input id="month" type="month">
+
+<input
+id="month"
+type="month"
+>
+
 
 <div id="cal"></div>
-<div id="count" class="count">선택된 날짜 0일</div>
+
+<div
+id="count"
+class="count"
+>
+선택된 날짜 0일
+</div>
+
 
 <div class="row2">
+
 <div>
+
 <label>기본 출근</label>
-<input id="start" type="time">
+
+<input
+id="start"
+type="time"
+>
+
 </div>
+
+
 <div>
+
 <label>기본 퇴근</label>
-<input id="end" type="time">
-</div>
+
+<input
+id="end"
+type="time"
+>
+
 </div>
 
-<button onclick="prepare()">선택한 날짜 확인</button>
+</div>
+
+
+<button onclick="prepare()">
+선택한 날짜 확인
+</button>
 
 </div>
 
-<details id="previewCard" class="card" style="display:none" open>
-<summary>저장 전 확인/수정</summary>
+
+<details
+id="previewCard"
+class="card"
+style="display:none"
+open
+>
+
+<summary>
+저장 전 확인/수정
+</summary>
+
 <div class="inner">
-<div class="note">퇴근시간이 다른 날만 수정한 뒤 저장하면 돼요.</div>
+
+<div class="note">
+퇴근시간이 다른 날만 수정한 뒤 저장하면 돼요.
+</div>
+
 <div id="preview"></div>
-<button onclick="saveWorks()">전체 근무 기록 저장</button>
+
+<button onclick="saveWorks()">
+전체 근무 기록 저장
+</button>
+
 </div>
 </details>
+
 
 <div class="card">
 
 <h2>근무기록</h2>
 
-<div class="filter" style="margin-top:12px">
-<input id="filterMonth" type="month">
-<button class="secondary" style="margin:0" onclick="clearFilter()">전체 보기</button>
+<div
+class="filter"
+style="margin-top:12px"
+>
+
+<input
+id="filterMonth"
+type="month"
+>
+
+<button
+class="secondary"
+style="margin:0"
+onclick="clearFilter()"
+>
+전체 보기
+</button>
+
 </div>
 
 <div id="records"></div>
 
 </div>
 
+
 <div class="card">
+
 <div class="launch">
 
 <div>
-<h2>월간 스케줄 달력</h2>
-<div class="note">달력만 크게 보기</div>
+
+<h2>
+월간 스케줄 달력
+</h2>
+
+<div class="note">
+달력만 크게 보기 / 이미지 저장
 </div>
 
-<button onclick="openSchedule()">달력 보기</button>
-
-</div>
 </div>
 
+<button onclick="openSchedule()">
+달력 보기
+</button>
+
 </div>
 
-<div id="scheduleModal" class="modal">
+</div>
+
+</div>
+
+
+<div
+id="scheduleModal"
+class="modal"
+>
 
 <div class="modalInner">
 
 <div class="modalTop">
 
 <div class="modalTitle">
-<h2>월간 스케줄</h2>
-<button class="close" onclick="closeSchedule()">닫기</button>
+
+<h2>
+월간 스케줄
+</h2>
+
+<div class="modalButtons">
+
+<button
+class="saveImg"
+onclick="saveScheduleImage()"
+>
+이미지 저장
+</button>
+
+<button
+class="close"
+onclick="closeSchedule()"
+>
+닫기
+</button>
+
 </div>
 
-<input id="scheduleMonth" type="month">
+</div>
+
+
+<input
+id="scheduleMonth"
+type="month"
+>
 
 </div>
+
 
 <div id="schedule"></div>
 
 </div>
+
 </div>
 
+
 <script>
-let employees=JSON.parse(localStorage.getItem("employees")||"[]");
-let works=JSON.parse(localStorage.getItem("works")||"[]");
-let settings=JSON.parse(localStorage.getItem("shiftSettings")||"{}");
+
+/* ======================
+   저장 데이터
+   기존 데이터 유지
+====================== */
+
+let employees=
+JSON.parse(
+localStorage.getItem("employees")
+||
+"[]"
+);
+
+let works=
+JSON.parse(
+localStorage.getItem("works")
+||
+"[]"
+);
+
+let settings=
+JSON.parse(
+localStorage.getItem("shiftSettings")
+||
+"{}"
+);
 
 let selected=[];
 let temp=[];
 
-const POS=["오픈","오전미들","오후미들","미들","마감","교육"];
+const POS=[
+"오픈",
+"오전미들",
+"오후미들",
+"미들",
+"마감",
+"교육"
+];
+
+
+/* ======================
+   저장
+====================== */
 
 function saveData(){
- localStorage.setItem("employees",JSON.stringify(employees));
- localStorage.setItem("works",JSON.stringify(works));
+
+localStorage.setItem(
+"employees",
+JSON.stringify(employees)
+);
+
+localStorage.setItem(
+"works",
+JSON.stringify(works)
+);
+
 }
+
 
 function saveSettings(){
- ["emp","pos","month","start","end","filterMonth","scheduleMonth"].forEach(id=>{
-  let e=document.getElementById(id);
-  if(e)settings[id]=e.value;
- });
- localStorage.setItem("shiftSettings",JSON.stringify(settings));
+
+[
+"emp",
+"pos",
+"month",
+"start",
+"end",
+"filterMonth",
+"scheduleMonth"
+]
+.forEach(id=>{
+
+let e=
+document.getElementById(id);
+
+if(e){
+settings[id]=e.value;
 }
+
+});
+
+localStorage.setItem(
+"shiftSettings",
+JSON.stringify(settings)
+);
+
+}
+
 
 function restore(){
- Object.keys(settings).forEach(id=>{
-  let e=document.getElementById(id);
-  if(e)e.value=settings[id];
- });
+
+Object.keys(settings)
+.forEach(id=>{
+
+let e=
+document.getElementById(id);
+
+if(e){
+e.value=settings[id];
 }
+
+});
+
+}
+
+
+/* ======================
+   문자 처리
+====================== */
 
 function esc(s){
- return String(s??"")
- .replaceAll("&","&amp;")
- .replaceAll("<","&lt;")
- .replaceAll(">","&gt;");
+
+return String(s??"")
+
+.replaceAll(
+"&",
+"&amp;"
+)
+
+.replaceAll(
+"<",
+"&lt;"
+)
+
+.replaceAll(
+">",
+"&gt;"
+);
+
 }
+
+
+/* ======================
+   직원 관리
+====================== */
 
 function addEmp(){
- let v=newEmp.value.trim();
 
- if(!v)return alert("직원 이름을 입력해줘!");
- if(employees.includes(v))return alert("이미 등록된 직원이에요.");
+let v=
+newEmp.value.trim();
 
- employees.push(v);
- newEmp.value="";
- saveData();
- renderEmp();
+if(!v){
+return alert(
+"직원 이름을 입력해줘!"
+);
 }
 
-function delEmp(n){
- if(!confirm(n+" 직원을 목록에서 삭제할까요?\n기존 기록은 남아요."))return;
-
- employees=employees.filter(x=>x!==n);
-
- saveData();
- renderEmp();
+if(
+employees.includes(v)
+){
+return alert(
+"이미 등록된 직원이에요."
+);
 }
 
-function renderEmp(){
+employees.push(v);
 
- emp.innerHTML='<option value="">직원을 선택하세요</option>';
- empList.innerHTML="";
+newEmp.value="";
 
- employees.forEach(n=>{
-
-  let o=document.createElement("option");
-  o.value=n;
-  o.textContent=n;
-  emp.appendChild(o);
-
-  let row=document.createElement("div");
-  row.className="empRow";
-
-  let nm=document.createElement("div");
-  nm.className="empName";
-  nm.textContent=n;
-
-  let btn=document.createElement("button");
-  btn.className="small danger";
-  btn.textContent="삭제";
-  btn.onclick=()=>delEmp(n);
-
-  row.appendChild(nm);
-  row.appendChild(btn);
-
-  empList.appendChild(row);
- });
-
- if(!employees.length){
-  empList.innerHTML='<div class="empty">직원을 먼저 추가해주세요.</div>';
- }
-
- if(settings.emp&&employees.includes(settings.emp)){
-  emp.value=settings.emp;
- }
-}
-
-function buildCal(){
-
- selected=[];
-
- let v=month.value;
-
- count.textContent="선택된 날짜 0일";
- cal.innerHTML="";
-
- if(!v)return;
-
- let [y,m]=v.split("-").map(Number);
-
- let first=new Date(y,m-1,1).getDay();
- let last=new Date(y,m,0).getDate();
-
- let h='<div class="calendar">'+
- ["일","월","화","수","목","금","토"]
- .map(x=>`<div class="week">${x}</div>`)
- .join("");
-
- for(let i=0;i<first;i++){
-  h+='<button class="day blank"></button>';
- }
-
- for(let d=1;d<=last;d++){
-
-  let date=
-  `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-
-  h+=`
-  <button
-  class="day"
-  id="d${d}"
-  onclick="toggleDay('${date}',${d})">
-  ${d}
-  </button>`;
- }
-
- cal.innerHTML=h+"</div>";
-
- saveSettings();
-}
-
-function toggleDay(date,d){
-
- let b=document.getElementById("d"+d);
-
- if(selected.includes(date)){
-
-  selected=selected.filter(x=>x!==date);
-
-  b.classList.remove("sel");
-
- }else{
-
-  selected.push(date);
-
-  selected.sort();
-
-  b.classList.add("sel");
- }
-
- count.textContent=
- `선택된 날짜 ${selected.length}일`;
-}
-
-function prepare(){
-
- if(!emp.value)return alert("직원을 선택해줘!");
- if(!selected.length)return alert("날짜를 선택해줘!");
- if(!start.value||!end.value)return alert("출퇴근 시간을 입력해줘!");
-
- saveSettings();
-
- temp=selected.map(date=>({
-  date,
-  name:emp.value,
-  position:pos.value,
-  start:start.value,
-  end:end.value
- }));
-
- preview.innerHTML=temp.map((x,i)=>`
- <div class="gen">
-
- <b>${dateText(x.date)}</b>
-
- <div class="note">
- ${esc(x.name)}
- ·
- ${esc(x.position)}
- ·
- 출근 ${x.start}
- </div>
-
- <input
- type="time"
- value="${x.end}"
- onchange="temp[${i}].end=this.value">
-
- </div>
- `).join("");
-
- previewCard.style.display="block";
- previewCard.open=true;
-}
-
-function mins(s,e){
-
- let[a,b]=s.split(":").map(Number);
- let[c,d]=e.split(":").map(Number);
-
- let x=a*60+b;
- let y=c*60+d;
-
- if(y<x)y+=1440;
-
- return y-x;
-}
-
-function saveWorks(){
-
- temp.forEach(x=>
-  works.push({
-   ...x,
-   id:Date.now()+Math.random(),
-   total:mins(x.start,x.end)
-  })
- );
-
- saveData();
-
- temp=[];
-
- previewCard.style.display="none";
-
- renderAll();
-
- alert("저장됐어요!");
-}
-
-function toggleRecords(id){
- document.getElementById(id).classList.toggle("open");
-}
-
-function toggleEdit(id){
- document.getElementById("edit"+id).classList.toggle("open");
-}
-
-function updateRecord(id){
-
- let w=works.find(x=>String(x.id)===String(id));
-
- if(!w)return;
-
- let p=document.getElementById("p"+id);
- let s=document.getElementById("s"+id);
- let e=document.getElementById("e"+id);
-
- if(!s.value||!e.value){
-  return alert("출퇴근 시간을 확인해줘!");
- }
-
- w.position=p.value;
- w.start=s.value;
- w.end=e.value;
- w.total=mins(w.start,w.end);
-
- saveData();
-
- renderAll();
-
- alert("수정됐어요!");
-}
-
-function delWork(id){
-
- if(!confirm("이 기록을 삭제할까요?"))return;
-
- works=works.filter(
-  x=>String(x.id)!==String(id)
- );
-
- saveData();
-
- renderAll();
-}
-
-function renderRecords(){
-
- let f=filterMonth.value
- ?works.filter(x=>x.date.startsWith(filterMonth.value))
- :works;
-
- let g={};
-
- f
- .sort((a,b)=>a.date.localeCompare(b.date))
- .forEach(x=>{
-  if(!g[x.name])g[x.name]=[];
-  g[x.name].push(x);
- });
-
- records.innerHTML="";
-
- if(!Object.keys(g).length){
-
-  records.innerHTML=
-  '<div class="empty">아직 기록이 없어요.</div>';
-
-  return;
- }
-
- Object.entries(g).forEach(([name,arr],i)=>{
-
-  let total=
-  arr.reduce((a,x)=>a+Number(x.total||0),0);
-
-  let rid="r"+i;
-
-  let body=arr.map(x=>{
-
-   let opts=POS.map(p=>
-   `<option ${x.position===p?"selected":""}>${p}</option>`
-   ).join("");
-
-   return `
-   <div class="record">
-
-   <b>${dateText(x.date)}</b>
-
-   <div class="meta">
-   ${esc(x.position)}
-   ·
-   ${x.start}
-   →
-   ${x.end}
-   <br>
-   ${timeText(x.total)}
-   </div>
-
-   <div class="actions">
-
-   <button
-   class="small secondary"
-   onclick="toggleEdit('${x.id}')">
-   기록 수정
-   </button>
-
-   <button
-   class="small danger"
-   onclick="delWork('${x.id}')">
-   삭제
-   </button>
-
-   </div>
-
-   <div class="edit" id="edit${x.id}">
-
-   <label>포지션</label>
-   <select id="p${x.id}">
-   ${opts}
-   </select>
-
-   <label>출근시간</label>
-   <input
-   id="s${x.id}"
-   type="time"
-   value="${x.start}">
-
-   <label>퇴근시간</label>
-   <input
-   id="e${x.id}"
-   type="time"
-   value="${x.end}">
-
-   <button onclick="updateRecord('${x.id}')">
-   수정 저장
-   </button>
-
-   </div>
-
-   </div>`;
-  }).join("");
-
-  records.innerHTML+=`
-
-  <div class="person">
-
-  <div class="personTop">
-
-  <div>
-
-  <b>${esc(name)}</b>
-
-  <div class="total">
-  ${arr.length}일 · 총 ${timeText(total)}
-  </div>
-
-  </div>
-
-  <button
-  class="small secondary"
-  onclick="toggleRecords('${rid}')">
-  상세보기
-  </button>
-
-  </div>
-
-  <div
-  class="records"
-  id="${rid}">
-  ${body}
-  </div>
-
-  </div>`;
- });
-}
-
-function clearFilter(){
-
- filterMonth.value="";
-
- saveSettings();
-
- renderRecords();
-}
-
-function openSchedule(){
-
- if(!scheduleMonth.value){
-
-  if(filterMonth.value){
-   scheduleMonth.value=filterMonth.value;
-  }else if(month.value){
-   scheduleMonth.value=month.value;
-  }else{
-   let n=new Date();
-
-   scheduleMonth.value=
-   `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}`;
-  }
- }
-
- renderSchedule();
-
- scheduleModal.classList.add("open");
-
- document.body.classList.add("lock");
-
- scheduleModal.scrollTop=0;
-}
-
-function closeSchedule(){
-
- scheduleModal.classList.remove("open");
-
- document.body.classList.remove("lock");
-}
-
-function renderSchedule(){
-
- let v=scheduleMonth.value;
-
- if(!v)return;
-
- let[y,m]=v.split("-").map(Number);
-
- let first=
- new Date(y,m-1,1).getDay();
-
- let last=
- new Date(y,m,0).getDate();
-
- let map={};
-
- works
- .filter(x=>x.date.startsWith(v))
- .sort((a,b)=>{
-
-  if(a.date!==b.date){
-   return a.date.localeCompare(b.date);
-  }
-
-  return order(a.position)-order(b.position);
- })
- .forEach(x=>{
-
-  if(!map[x.date])map[x.date]=[];
-
-  map[x.date].push(x);
- });
-
- let h=
- '<div class="schedule">'+
- ["일","월","화","수","목","금","토"]
- .map(x=>`<div class="week">${x}</div>`)
- .join("");
-
- for(let i=0;i<first;i++){
-
-  h+='<div class="scheduleDay blank"></div>';
- }
-
- for(let d=1;d<=last;d++){
-
-  let date=
-  `${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
-
-  let lines=
-  (map[date]||[])
-  .map(x=>
-  `<div class="shift">
-   <span class="pos">${esc(x.position)}</span>
-   <span class="nm">${esc(x.name)}</span>
-   </div>`
-  )
-  .join("");
-
-  h+=`
-  <div class="scheduleDay">
-
-  <div class="scheduleDate">
-  ${d}
-  </div>
-
-  ${lines}
-
-  </div>`;
- }
-
- schedule.innerHTML=h+"</div>";
-
- saveSettings();
-}
-
-function order(p){
-
- return {
-  "오픈":1,
-  "오전미들":2,
-  "미들":3,
-  "오후미들":4,
-  "마감":5,
-  "교육":6
- }[p]||99;
-}
-
-function dateText(d){
-
- let a=d.split("-");
-
- return `${Number(a[1])}월 ${Number(a[2])}일`;
-}
-
-function timeText(n){
-
- n=Number(n||0);
-
- let h=Math.floor(n/60);
- let m=n%60;
-
- if(h&&m)return `${h}시간 ${m}분`;
-
- if(h)return `${h}시간`;
-
- return `${m}분`;
-}
-
-function renderAll(){
-
- renderRecords();
-
- if(scheduleModal.classList.contains("open")){
-  renderSchedule();
- }
-}
+saveData();
 
 renderEmp();
 
-restore();
-
-if(!scheduleMonth.value){
-
- let n=new Date();
-
- scheduleMonth.value=
- `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}`;
 }
 
-if(month.value){
- buildCal();
+
+function delEmp(n){
+
+if(
+!confirm(
+n+
+" 직원을 목록에서 삭제할까요?\n기존 기록은 남아요."
+)
+){
+return;
 }
 
-["emp","pos","start","end"].forEach(id=>
- document.getElementById(id)
- .addEventListener("change",saveSettings)
+employees=
+employees.filter(
+x=>x!==n
 );
 
-month.addEventListener("change",buildCal);
+saveData();
 
-filterMonth.addEventListener("change",()=>{
- saveSettings();
- renderRecords();
+renderEmp();
+
+}
+
+
+function renderEmp(){
+
+emp.innerHTML=
+'<option value="">직원을 선택하세요</option>';
+
+empList.innerHTML="";
+
+
+employees.forEach(n=>{
+
+let o=
+document.createElement(
+"option"
+);
+
+o.value=n;
+
+o.textContent=n;
+
+emp.appendChild(o);
+
+
+let row=
+document.createElement(
+"div"
+);
+
+row.className=
+"empRow";
+
+
+let nm=
+document.createElement(
+"div"
+);
+
+nm.className=
+"empName";
+
+nm.textContent=n;
+
+
+let btn=
+document.createElement(
+"button"
+);
+
+btn.className=
+"small danger";
+
+btn.textContent=
+"삭제";
+
+btn.onclick=
+()=>delEmp(n);
+
+
+row.appendChild(nm);
+
+row.appendChild(btn);
+
+empList.appendChild(row);
+
 });
 
-scheduleMonth.addEventListener("change",renderSchedule);
 
-renderRecords();
-</script>
+if(
+!employees.length
+){
 
-</body>
-</html>
+empList.innerHTML=
+'<div class="empty">직원을 먼저 추가해주세요.</div>';
+
+}
+
+
+if(
+settings.emp
+&&
+employees.includes(
+settings.emp
+)
+){
+
+emp.value=
+settings.emp;
+
+}
+
+}
+
+
+/* ======================
+   근무일 달력
+====================== */
+
+function buildCal(){
+
+selected=[];
+
+let v=
+month.value;
+
+count.textContent=
+"선택된 날짜 0일";
+
+cal.innerHTML="";
+
+if(!v){
+return;
+}
+
+let [y,m]=
+v.split("-")
+.map(Number);
+
+let first=
+new Date(
+y,
+m-1,
+1
+).getDay();
+
+let last=
+new Date(
+y,
+m,
+0
+).getDate();
+
+
+let h=
+'<div class="calendar">'
++
+[
+"일",
+"월",
+"화",
+"수",
+"목",
+"금",
+"토"
+]
+.map(
+x=>
+`<div class="week">${x}</div>`
+)
+.join("");
+
+
+for(
+let i=0;
+i<first;
+i++
+){
+
+h+=
+'<button class="day blank"></button>';
+
+}
+
+
+for(
+let d=1;
+d<=last;
+d++
+){
+
+let date=
+`${y}-${String(m).padStart(2,"0")}-${String(d).padStart(2,"0")}`;
+
+
+h+=`
+
+<button
+class="day"
+id="d${d}"
+onclick="toggleDay('${date}',${d})"
+>
+
+${d}
+
+</button>
+
+`;
+
+}
+
+
+cal.innerHTML=
+h+"</div>";
+
+saveSettings();
+
+}
+
+
+function toggleDay(
+date,
+d
+){
+
+let b=
+document.getElementById(
+"d"+d
+);
+
+
+if(
+selected.includes(
+date
+)
+){
+
+selected=
+selected.filter(
+x=>x!==date
+);
+
+b.classList.remove(
+"sel"
+);
+
+}else{
+
+selected.push(
+date
+);
+
+selected.sort();
+
+b.classList.add(
+"sel"
+);
+
+}
+
+
+count.textContent=
+`선택된 날짜 ${selected.length}일`;
+
+}
+
+
+/* ======================
+   저장 전 확인
+====================== */
+
+function prepare(){
+
+if(!emp.value){
+
+return alert(
+"직원을 선택해줘!"
+);
+
+}
+
+if(
+!selected.length
+){
+
+return alert(
+"날짜를 선택해줘!"
+);
+
+}
+
+if(
+!start.value
+||
+!end.value
+){
+
+return alert(
+"출퇴근 시간을 입력해줘!"
+);
+
+}
+
+
+saveSettings();
+
+
+temp=
+selected.map(
+date=>({
+
+date,
+
+name:
+emp.value,
+
+position:
+pos.value,
+
+start:
+start.value,
+
+end:
+end.value
+
+})
+);
+
+
+preview.innerHTML=
+temp.map(
+(x,i)=>`
+
+<div class="gen">
+
+<b>
+${dateText(x.date)}
+</b>
+
+<div class="note">
+
+${esc(x.name)}
+
+·
+
+${esc(x.position)}
+
+·
+
+출근 ${x.start}
+
+</div>
+
+
+<input
+type="time"
+value="${x.end}"
+onchange="temp[${i}].end=this.value"
+>
+
+</div>
+
+`
+)
+.join("");
+
+
+previewCard.style.display=
+"block";
+
+previewCard.open=
+true;
+
+}
+
+
+/* ======================
+   근무시간 계산
+====================== */
+
+function mins(
+s,
+e
+){
+
+let[a,b]=
+s.split(":")
+.map(Number);
+
+let[c,d]=
+e.split(":")
+.map(Number);
+
+
+let x=
+a*60+b;
+
+let y=
+c*60+d;
+
+
+if(
+y<x
+){
+
+y+=1440;
+
+}
