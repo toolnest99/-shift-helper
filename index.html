@@ -68,9 +68,7 @@ details.card[open]>summary::after{
   content:"접기";
 }
 
-.details-body{
-  padding:0 16px 16px;
-}
+.details-body{padding:0 16px 16px}
 
 label{
   display:block;
@@ -216,9 +214,7 @@ button{
   gap:10px;
 }
 
-.person-name{
-  font-weight:900;
-}
+.person-name{font-weight:900}
 
 .person-total{
   font-size:13px;
@@ -231,9 +227,7 @@ button{
   margin-top:10px;
 }
 
-.record-list.open{
-  display:block;
-}
+.record-list.open{display:block}
 
 .record{
   background:#fff;
@@ -243,9 +237,7 @@ button{
   border:1px solid #e8e8e8;
 }
 
-.record-date{
-  font-weight:800;
-}
+.record-date{font-weight:800}
 
 .record-meta{
   font-size:13px;
@@ -260,9 +252,7 @@ button{
   margin-top:9px;
 }
 
-.record-actions button{
-  flex:1;
-}
+.record-actions button{flex:1}
 
 .edit-box{
   display:none;
@@ -271,9 +261,7 @@ button{
   border-top:1px solid #eee;
 }
 
-.edit-box.open{
-  display:block;
-}
+.edit-box.open{display:block}
 
 .empty{
   color:#999;
@@ -305,9 +293,7 @@ button{
   -webkit-overflow-scrolling:touch;
 }
 
-.schedule-modal.open{
-  display:block;
-}
+.schedule-modal.open{display:block}
 
 .schedule-modal-inner{
   max-width:760px;
@@ -334,9 +320,7 @@ button{
   margin-bottom:12px;
 }
 
-.schedule-modal-title h2{
-  font-size:24px;
-}
+.schedule-modal-title h2{font-size:24px}
 
 .modal-actions{
   display:flex;
@@ -424,6 +408,76 @@ button{
   min-width:0;
 }
 
+/* 직원별 근무표 */
+
+.report-sheet{
+  background:#fff;
+  border:1px solid #e6e1d8;
+  border-radius:16px;
+  padding:16px;
+  margin-top:14px;
+}
+
+.report-title{
+  text-align:center;
+  font-size:20px;
+  font-weight:900;
+  margin:0 0 14px;
+}
+
+.report-table{
+  width:100%;
+  border-collapse:collapse;
+  overflow:hidden;
+  border-radius:10px;
+}
+
+.report-table th,
+.report-table td{
+  border:1px solid #ddd;
+  padding:10px 8px;
+  text-align:center;
+  font-size:14px;
+}
+
+.report-table th{
+  background:#f3efe8;
+  font-weight:800;
+}
+
+.report-total-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:8px;
+  padding:12px 14px;
+  border:1px solid #ddd;
+  background:#f7f4ee;
+  border-radius:10px;
+  font-weight:900;
+}
+
+.report-actions{
+  display:flex;
+  gap:8px;
+  margin-top:12px;
+}
+
+.report-actions button{
+  width:100%;
+  margin:0;
+}
+
+.report-placeholder{
+  color:#888;
+  font-size:14px;
+  text-align:center;
+  padding:22px 10px;
+  background:#f7f7f8;
+  border-radius:12px;
+  margin-top:14px;
+}
+
 @media(max-width:520px){
   .schedule-modal-inner{padding:12px}
   .schedule-calendar{gap:5px}
@@ -434,6 +488,14 @@ button{
     padding:9px 11px;
     font-size:13px;
   }
+
+  .report-table th,
+  .report-table td{
+    font-size:12px;
+    padding:8px 5px;
+  }
+
+  .report-title{font-size:17px}
 }
 </style>
 </head>
@@ -449,7 +511,6 @@ button{
 </div>
 
 <details class="card">
-
 <summary>직원 관리</summary>
 
 <div class="details-body">
@@ -472,7 +533,6 @@ style="margin-top:12px;"
 ></div>
 
 </div>
-
 </details>
 
 
@@ -483,11 +543,8 @@ style="margin-top:12px;"
 <label>직원</label>
 
 <select id="employeeSelect">
-<option value="">
-직원을 선택하세요
-</option>
+<option value="">직원을 선택하세요</option>
 </select>
-
 
 <label>포지션</label>
 
@@ -500,14 +557,12 @@ style="margin-top:12px;"
 <option value="교육">교육</option>
 </select>
 
-
 <label>월 선택</label>
 
 <input
 id="monthPicker"
 type="month"
 >
-
 
 <div id="calendarWrap"></div>
 
@@ -518,34 +573,25 @@ class="selected-count"
 선택된 날짜 0일
 </div>
 
-
 <div class="row2">
 
 <div>
-
 <label>기본 출근</label>
-
 <input
 id="defaultStart"
 type="time"
 >
-
 </div>
 
-
 <div>
-
 <label>기본 퇴근</label>
-
 <input
 id="defaultEnd"
 type="time"
 >
-
 </div>
 
 </div>
-
 
 <button onclick="makeSelectedDates()">
 선택한 날짜 확인
@@ -578,7 +624,6 @@ open
 </button>
 
 </div>
-
 </details>
 
 
@@ -605,7 +650,6 @@ onclick="clearFilter()"
 </button>
 
 </div>
-
 
 <div
 id="summary"
@@ -635,12 +679,53 @@ class="summary-grid"
 
 </div>
 
-
 <button onclick="openScheduleModal()">
 달력 보기
 </button>
 
 </div>
+
+</div>
+
+
+<div class="card">
+
+<h2>직원별 월간 근무표</h2>
+
+<div class="note">
+저장된 근무기록으로 직원별 근무표를 자동으로 만들어요.
+</div>
+
+<div class="row2" style="margin-top:12px;">
+
+<div>
+
+<label>월 선택</label>
+
+<input
+id="reportMonth"
+type="month"
+>
+
+</div>
+
+<div>
+
+<label>직원 선택</label>
+
+<select id="reportEmployee">
+<option value="">직원 선택</option>
+</select>
+
+</div>
+
+</div>
+
+<button onclick="renderEmployeeReport()">
+근무표 보기
+</button>
+
+<div id="employeeReportWrap"></div>
 
 </div>
 
@@ -680,14 +765,12 @@ onclick="closeScheduleModal()"
 
 </div>
 
-
 <input
 id="scheduleMonth"
 type="month"
 >
 
 </div>
-
 
 <div id="scheduleCalendar"></div>
 
@@ -702,21 +785,21 @@ type="month"
    기존 저장 데이터 그대로
 ========================= */
 
-let employees =
+let employees=
 JSON.parse(
 localStorage.getItem("employees")
 ||
 "[]"
 );
 
-let works =
+let works=
 JSON.parse(
 localStorage.getItem("works")
 ||
 "[]"
 );
 
-let settings =
+let settings=
 JSON.parse(
 localStorage.getItem("shiftHelperSettings")
 ||
@@ -725,10 +808,8 @@ localStorage.getItem("shiftSettings")
 "{}"
 );
 
-
 let selectedDates=[];
 let generatedWorks=[];
-
 
 const positions=[
 "오픈",
@@ -753,7 +834,6 @@ JSON.stringify(employees)
 
 }
 
-
 function saveWorks(){
 
 localStorage.setItem(
@@ -762,7 +842,6 @@ JSON.stringify(works)
 );
 
 }
-
 
 function saveSettings(){
 
@@ -773,9 +852,10 @@ const ids=[
 "defaultStart",
 "defaultEnd",
 "monthFilter",
-"scheduleMonth"
+"scheduleMonth",
+"reportMonth",
+"reportEmployee"
 ];
-
 
 ids.forEach(id=>{
 
@@ -787,7 +867,6 @@ settings[id]=el.value;
 }
 
 });
-
 
 localStorage.setItem(
 "shiftHelperSettings",
@@ -801,7 +880,6 @@ JSON.stringify(settings)
 
 }
 
-
 function restoreSettings(){
 
 const ids=[
@@ -810,9 +888,10 @@ const ids=[
 "defaultStart",
 "defaultEnd",
 "monthFilter",
-"scheduleMonth"
+"scheduleMonth",
+"reportMonth",
+"reportEmployee"
 ];
-
 
 ids.forEach(id=>{
 
@@ -849,7 +928,6 @@ document.getElementById(
 const name=
 input.value.trim();
 
-
 if(!name){
 
 alert(
@@ -859,7 +937,6 @@ alert(
 return;
 
 }
-
 
 if(
 employees.includes(name)
@@ -873,7 +950,6 @@ return;
 
 }
 
-
 employees.push(name);
 
 saveEmployees();
@@ -883,7 +959,6 @@ input.value="";
 renderEmployees();
 
 }
-
 
 function deleteEmployee(name){
 
@@ -897,19 +972,16 @@ return;
 
 }
 
-
 employees=
 employees.filter(
 item=>item!==name
 );
-
 
 saveEmployees();
 
 renderEmployees();
 
 }
-
 
 function renderEmployees(){
 
@@ -923,12 +995,22 @@ document.getElementById(
 "employeeSelect"
 );
 
+const reportSelect=
+document.getElementById(
+"reportEmployee"
+);
 
 list.innerHTML="";
 
 select.innerHTML=
 `<option value="">직원을 선택하세요</option>`;
 
+if(reportSelect){
+
+reportSelect.innerHTML=
+`<option value="">직원 선택</option>`;
+
+}
 
 if(
 employees.length===0
@@ -939,7 +1021,6 @@ list.innerHTML=
 
 }
 
-
 employees.forEach(name=>{
 
 const row=
@@ -949,7 +1030,6 @@ document.createElement(
 
 row.className=
 "employee-row";
-
 
 row.innerHTML=`
 
@@ -966,9 +1046,7 @@ onclick='deleteEmployee(${JSON.stringify(name)})'
 
 `;
 
-
 list.appendChild(row);
-
 
 const option=
 document.createElement(
@@ -976,13 +1054,27 @@ document.createElement(
 );
 
 option.value=name;
-
 option.textContent=name;
 
 select.appendChild(option);
 
-});
+if(reportSelect){
 
+const reportOption=
+document.createElement(
+"option"
+);
+
+reportOption.value=name;
+reportOption.textContent=name;
+
+reportSelect.appendChild(
+reportOption
+);
+
+}
+
+});
 
 if(
 settings.employeeSelect
@@ -994,6 +1086,21 @@ settings.employeeSelect
 
 select.value=
 settings.employeeSelect;
+
+}
+
+if(
+reportSelect
+&&
+settings.reportEmployee
+&&
+employees.includes(
+settings.reportEmployee
+)
+){
+
+reportSelect.value=
+settings.reportEmployee;
 
 }
 
@@ -1011,17 +1118,14 @@ document.getElementById(
 "monthPicker"
 ).value;
 
-
 const wrap=
 document.getElementById(
 "calendarWrap"
 );
 
-
 selectedDates=[];
 
 updateSelectedCount();
-
 
 if(!monthValue){
 
@@ -1031,12 +1135,10 @@ return;
 
 }
 
-
 const [year,month]=
 monthValue
 .split("-")
 .map(Number);
-
 
 const firstDay=
 new Date(
@@ -1045,14 +1147,12 @@ month-1,
 1
 ).getDay();
 
-
 const lastDate=
 new Date(
 year,
 month,
 0
 ).getDate();
-
 
 let html=`
 
@@ -1067,7 +1167,6 @@ let html=`
 <div class="day-name">토</div>
 
 `;
-
 
 for(
 let i=0;
@@ -1086,7 +1185,6 @@ type="button"
 
 }
 
-
 for(
 let day=1;
 day<=lastDate;
@@ -1095,7 +1193,6 @@ day++
 
 const dateString=
 `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-
 
 html+=`
 
@@ -1114,19 +1211,15 @@ ${day}
 
 }
 
-
 html+=
 `</div>`;
-
 
 wrap.innerHTML=
 html;
 
-
 saveSettings();
 
 }
-
 
 function toggleDate(
 dateString,
@@ -1137,7 +1230,6 @@ const btn=
 document.getElementById(
 `day-${day}`
 );
-
 
 if(
 selectedDates.includes(
@@ -1168,11 +1260,9 @@ btn.classList.add(
 
 }
 
-
 updateSelectedCount();
 
 }
-
 
 function updateSelectedCount(){
 
@@ -1196,24 +1286,20 @@ document.getElementById(
 "employeeSelect"
 ).value;
 
-
 const position=
 document.getElementById(
 "position"
 ).value;
-
 
 const defaultStart=
 document.getElementById(
 "defaultStart"
 ).value;
 
-
 const defaultEnd=
 document.getElementById(
 "defaultEnd"
 ).value;
-
 
 if(!employee){
 
@@ -1224,7 +1310,6 @@ alert(
 return;
 
 }
-
 
 if(
 selectedDates.length===0
@@ -1237,7 +1322,6 @@ alert(
 return;
 
 }
-
 
 if(
 !defaultStart
@@ -1252,7 +1336,6 @@ alert(
 return;
 
 }
-
 
 generatedWorks=
 selectedDates.map(
@@ -1271,13 +1354,11 @@ end:defaultEnd
 })
 );
 
-
 saveSettings();
 
 renderGenerated();
 
 }
-
 
 function renderGenerated(){
 
@@ -1286,12 +1367,10 @@ document.getElementById(
 "generatedCard"
 );
 
-
 const list=
 document.getElementById(
 "generatedList"
 );
-
 
 card.style.display=
 "block";
@@ -1299,9 +1378,7 @@ card.style.display=
 card.open=
 true;
 
-
 list.innerHTML="";
-
 
 generatedWorks.forEach(
 (item,index)=>{
@@ -1313,7 +1390,6 @@ document.createElement(
 
 row.className=
 "generated-row";
-
 
 row.innerHTML=`
 
@@ -1343,7 +1419,6 @@ onchange="changeGeneratedEnd(${index},this.value)"
 
 `;
 
-
 list.appendChild(
 row
 );
@@ -1351,7 +1426,6 @@ row
 });
 
 }
-
 
 function changeGeneratedEnd(
 index,
@@ -1381,7 +1455,6 @@ alert(
 return;
 
 }
-
 
 generatedWorks.forEach(
 item=>{
@@ -1420,27 +1493,24 @@ item.end
 
 });
 
-
 saveWorks();
 
-
 generatedWorks=[];
-
 
 document.getElementById(
 "generatedCard"
 ).style.display=
 "none";
 
-
 alert(
 "근무 기록이 저장됐어요!"
 );
 
-
 renderWorks();
 
 renderScheduleCalendar();
+
+renderEmployeeReport();
 
 }
 
@@ -1459,20 +1529,16 @@ start
 .split(":")
 .map(Number);
 
-
 const [eh,em]=
 end
 .split(":")
 .map(Number);
 
-
 let startMin=
 sh*60+sm;
 
-
 let endMin=
 eh*60+em;
-
 
 if(
 endMin<startMin
@@ -1481,7 +1547,6 @@ endMin<startMin
 endMin+=1440;
 
 }
-
 
 return(
 endMin-startMin
@@ -1501,18 +1566,15 @@ document.getElementById(
 `edit-start-${id}`
 );
 
-
 const endInput=
 document.getElementById(
 `edit-end-${id}`
 );
 
-
 const positionInput=
 document.getElementById(
 `edit-position-${id}`
 );
-
 
 if(
 !startInput
@@ -1528,7 +1590,6 @@ return;
 
 }
 
-
 if(
 !endInput
 ||
@@ -1543,7 +1604,6 @@ return;
 
 }
 
-
 const item=
 works.find(
 w=>
@@ -1552,23 +1612,18 @@ String(w.id)
 String(id)
 );
 
-
 if(!item){
 return;
 }
 
-
 item.start=
 startInput.value;
-
 
 item.end=
 endInput.value;
 
-
 item.position=
 positionInput.value;
-
 
 item.total=
 calculateWorkMinutes(
@@ -1576,13 +1631,13 @@ item.start,
 item.end
 );
 
-
 saveWorks();
 
 renderWorks();
 
 renderScheduleCalendar();
 
+renderEmployeeReport();
 
 alert(
 "근무기록이 수정됐어요!"
@@ -1590,14 +1645,12 @@ alert(
 
 }
 
-
 function toggleEdit(id){
 
 const box=
 document.getElementById(
 `edit-box-${id}`
 );
-
 
 if(box){
 
@@ -1608,7 +1661,6 @@ box.classList.toggle(
 }
 
 }
-
 
 function togglePerson(
 nameKey
@@ -1619,7 +1671,6 @@ document.getElementById(
 `records-${nameKey}`
 );
 
-
 if(box){
 
 box.classList.toggle(
@@ -1629,7 +1680,6 @@ box.classList.toggle(
 }
 
 }
-
 
 function deleteWork(id){
 
@@ -1643,7 +1693,6 @@ return;
 
 }
 
-
 works=
 works.filter(
 item=>
@@ -1652,12 +1701,13 @@ String(item.id)
 String(id)
 );
 
-
 saveWorks();
 
 renderWorks();
 
 renderScheduleCalendar();
+
+renderEmployeeReport();
 
 }
 
@@ -1672,13 +1722,11 @@ document.getElementById(
 "monthFilter"
 ).value="";
 
-
 saveSettings();
 
 renderWorks();
 
 }
-
 
 function renderWorks(){
 
@@ -1687,17 +1735,14 @@ document.getElementById(
 "summary"
 );
 
-
 const monthFilter=
 document.getElementById(
 "monthFilter"
 ).value;
 
-
 let filtered=[
 ...works
 ];
-
 
 if(monthFilter){
 
@@ -1713,7 +1758,6 @@ monthFilter
 
 }
 
-
 filtered.sort(
 (a,b)=>
 String(a.date)
@@ -1721,7 +1765,6 @@ String(a.date)
 String(b.date)
 )
 );
-
 
 if(
 filtered.length===0
@@ -1739,9 +1782,7 @@ return;
 
 }
 
-
 const grouped={};
-
 
 filtered.forEach(
 item=>{
@@ -1757,12 +1798,10 @@ items:[]
 
 }
 
-
 grouped[item.name].total+=
 Number(
 item.total||0
 );
-
 
 grouped[item.name].items.push(
 item
@@ -1770,9 +1809,7 @@ item
 
 });
 
-
 summary.innerHTML="";
-
 
 Object.keys(grouped)
 .sort()
@@ -1782,10 +1819,8 @@ Object.keys(grouped)
 const group=
 grouped[name];
 
-
 const nameKey=
 `p${idx}`;
-
 
 const person=
 document.createElement(
@@ -1794,7 +1829,6 @@ document.createElement(
 
 person.className=
 "person-card";
-
 
 const recordsHtml=
 group.items.map(
@@ -1806,7 +1840,6 @@ p=>
 `<option value="${p}" ${item.position===p?"selected":""}>${p}</option>`
 )
 .join("");
-
 
 return`
 
@@ -1834,7 +1867,6 @@ ${formatMinutes(item.total)}
 
 </div>
 
-
 <div class="record-actions">
 
 <button
@@ -1853,7 +1885,6 @@ onclick="deleteWork('${item.id}')"
 
 </div>
 
-
 <div
 class="edit-box"
 id="edit-box-${item.id}"
@@ -1869,7 +1900,6 @@ ${positionOptions}
 
 </select>
 
-
 <label>출근시간</label>
 
 <input
@@ -1878,7 +1908,6 @@ type="time"
 value="${item.start}"
 >
 
-
 <label>퇴근시간</label>
 
 <input
@@ -1886,7 +1915,6 @@ id="edit-end-${item.id}"
 type="time"
 value="${item.end}"
 >
-
 
 <button
 onclick="updateRecord('${item.id}')"
@@ -1902,7 +1930,6 @@ onclick="updateRecord('${item.id}')"
 
 })
 .join("");
-
 
 person.innerHTML=`
 
@@ -1926,7 +1953,6 @@ ${group.items.length}일
 
 </div>
 
-
 <button
 class="small-btn secondary"
 onclick="togglePerson('${nameKey}')"
@@ -1935,7 +1961,6 @@ onclick="togglePerson('${nameKey}')"
 </button>
 
 </div>
-
 
 <div
 class="record-list"
@@ -1948,7 +1973,6 @@ ${recordsHtml}
 
 `;
 
-
 summary.appendChild(
 person
 );
@@ -1959,7 +1983,7 @@ person
 
 
 /* =========================
-   글자 표시
+   공통 표시
 ========================= */
 
 function formatMinutes(
@@ -1971,16 +1995,13 @@ Number(
 minutes||0
 );
 
-
 const h=
 Math.floor(
 minutes/60
 );
 
-
 const m=
 minutes%60;
-
 
 if(
 h&&m
@@ -1992,7 +2013,6 @@ return(
 
 }
 
-
 if(h){
 
 return(
@@ -2001,13 +2021,11 @@ return(
 
 }
 
-
 return(
 `${m}분`
 );
 
 }
-
 
 function formatDate(
 date
@@ -2017,13 +2035,11 @@ const parts=
 String(date)
 .split("-");
 
-
 return(
 `${Number(parts[1])}월 ${Number(parts[2])}일`
 );
 
 }
-
 
 function escapeHtml(
 value
@@ -2072,27 +2088,22 @@ document.getElementById(
 "scheduleModal"
 );
 
-
 getDefaultScheduleMonth();
 
 renderScheduleCalendar();
-
 
 modal.classList.add(
 "open"
 );
 
-
 document.body.classList.add(
 "modal-open"
 );
-
 
 modal.scrollTop=
 0;
 
 }
-
 
 function closeScheduleModal(){
 
@@ -2103,7 +2114,6 @@ document.getElementById(
 "open"
 );
 
-
 document.body
 .classList.remove(
 "modal-open"
@@ -2111,14 +2121,12 @@ document.body
 
 }
 
-
 function getDefaultScheduleMonth(){
 
 const scheduleInput=
 document.getElementById(
 "scheduleMonth"
 );
-
 
 if(
 scheduleInput.value
@@ -2128,12 +2136,10 @@ return;
 
 }
 
-
 const monthFilter=
 document.getElementById(
 "monthFilter"
 );
-
 
 if(
 monthFilter.value
@@ -2147,7 +2153,6 @@ monthFilter.value;
 const now=
 new Date();
 
-
 scheduleInput.value=
 `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
 
@@ -2155,28 +2160,23 @@ scheduleInput.value=
 
 }
 
-
 function getScheduleData(){
 
 getDefaultScheduleMonth();
-
 
 const monthValue=
 document.getElementById(
 "scheduleMonth"
 ).value;
 
-
 if(!monthValue){
 return null;
 }
-
 
 const [year,month]=
 monthValue
 .split("-")
 .map(Number);
-
 
 const firstDay=
 new Date(
@@ -2185,14 +2185,12 @@ month-1,
 1
 ).getDay();
 
-
 const lastDate=
 new Date(
 year,
 month,
 0
 ).getDate();
-
 
 const records=
 works
@@ -2221,7 +2219,6 @@ b.date
 
 }
 
-
 return(
 positionOrder(
 a.position
@@ -2235,9 +2232,7 @@ b.position
 }
 );
 
-
 const byDate={};
-
 
 records.forEach(
 item=>{
@@ -2250,13 +2245,11 @@ byDate[item.date]=[];
 
 }
 
-
 byDate[item.date].push(
 item
 );
 
 });
-
 
 return{
 
@@ -2271,7 +2264,6 @@ byDate
 
 }
 
-
 function renderScheduleCalendar(){
 
 const wrap=
@@ -2279,10 +2271,8 @@ document.getElementById(
 "scheduleCalendar"
 );
 
-
 const data=
 getScheduleData();
-
 
 if(!data){
 
@@ -2292,7 +2282,6 @@ return;
 
 }
 
-
 const {
 year,
 month,
@@ -2300,7 +2289,6 @@ firstDay,
 lastDate,
 byDate
 }=data;
-
 
 let out=`
 
@@ -2316,7 +2304,6 @@ let out=`
 
 `;
 
-
 for(
 let i=0;
 i<firstDay;
@@ -2331,7 +2318,6 @@ out+=`
 
 }
 
-
 for(
 let day=1;
 day<=lastDate;
@@ -2341,10 +2327,8 @@ day++
 const dateString=
 `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
 
-
 const dayRecords=
 byDate[dateString]||[];
-
 
 const lines=
 dayRecords.map(
@@ -2366,7 +2350,6 @@ ${escapeHtml(item.name||"")}
 )
 .join("");
 
-
 out+=`
 
 <div class="schedule-day">
@@ -2383,19 +2366,15 @@ ${lines}
 
 }
 
-
 out+=
 `</div>`;
-
 
 wrap.innerHTML=
 out;
 
-
 saveSettings();
 
 }
-
 
 function positionOrder(
 position
@@ -2417,7 +2396,6 @@ const order={
 
 };
 
-
 return(
 order[position]
 ||
@@ -2428,8 +2406,7 @@ order[position]
 
 
 /* =========================
-   이미지 저장 기능
-   저장 데이터는 건드리지 않음
+   달력 이미지 저장
 ========================= */
 
 function roundedRect(
@@ -2500,12 +2477,10 @@ ctx.closePath();
 
 }
 
-
 function saveScheduleImage(){
 
 const data=
 getScheduleData();
-
 
 if(!data){
 
@@ -2517,7 +2492,6 @@ return;
 
 }
 
-
 const {
 year,
 month,
@@ -2526,23 +2500,15 @@ lastDate,
 byDate
 }=data;
 
-
-/* 이미지 크기 */
-
 const width=1400;
-
 const margin=60;
-
 const headerHeight=150;
-
 const weekdayHeight=55;
 
 const cellWidth=
 (width-margin*2)/7;
 
-
 let maxPeople=1;
-
 
 Object.values(byDate)
 .forEach(items=>{
@@ -2555,7 +2521,6 @@ items.length
 
 });
 
-
 const cellHeight=
 Math.max(
 180,
@@ -2563,12 +2528,10 @@ Math.max(
 maxPeople*38
 );
 
-
 const rows=
 Math.ceil(
 (firstDay+lastDate)/7
 );
-
 
 const height=
 margin+
@@ -2577,12 +2540,10 @@ weekdayHeight+
 rows*cellHeight+
 margin;
 
-
 const canvas=
 document.createElement(
 "canvas"
 );
-
 
 canvas.width=
 width;
@@ -2590,14 +2551,10 @@ width;
 canvas.height=
 height;
 
-
 const ctx=
 canvas.getContext(
 "2d"
 );
-
-
-/* 배경 */
 
 ctx.fillStyle=
 "#f6f7f9";
@@ -2608,9 +2565,6 @@ ctx.fillRect(
 width,
 height
 );
-
-
-/* 제목 */
 
 ctx.textAlign=
 "left";
@@ -2624,15 +2578,11 @@ ctx.fillStyle=
 ctx.font=
 "700 52px -apple-system, BlinkMacSystemFont, Arial, sans-serif";
 
-
 ctx.fillText(
 `${year}년 ${month}월 월간 스케줄`,
 margin,
 95
 );
-
-
-/* 요일 */
 
 const weekdays=[
 "일",
@@ -2644,7 +2594,6 @@ const weekdays=[
 "토"
 ];
 
-
 ctx.font=
 "700 24px -apple-system, BlinkMacSystemFont, Arial, sans-serif";
 
@@ -2654,30 +2603,20 @@ ctx.fillStyle=
 ctx.textAlign=
 "center";
 
-
 weekdays.forEach(
 (day,index)=>{
 
 ctx.fillText(
-
 day,
-
-margin
-+
-index*cellWidth
-+
+margin+
+index*cellWidth+
 cellWidth/2,
-
-headerHeight
-+
+headerHeight+
 weekdayHeight/2
-
 );
 
-});
-
-
-/* 날짜칸 */
+}
+);
 
 for(
 let day=1;
@@ -2688,22 +2627,18 @@ day++
 const index=
 firstDay+day-1;
 
-
 const column=
 index%7;
-
 
 const row=
 Math.floor(
 index/7
 );
 
-
 const x=
 margin+
 column*cellWidth+
 5;
-
 
 const y=
 headerHeight+
@@ -2711,16 +2646,11 @@ weekdayHeight+
 row*cellHeight+
 5;
 
-
 const w=
 cellWidth-10;
 
-
 const h=
 cellHeight-10;
-
-
-/* 흰색 카드 */
 
 roundedRect(
 ctx,
@@ -2731,12 +2661,10 @@ h,
 16
 );
 
-
 ctx.fillStyle=
 "#fff";
 
 ctx.fill();
-
 
 ctx.strokeStyle=
 "#e8e8e8";
@@ -2745,9 +2673,6 @@ ctx.lineWidth=
 2;
 
 ctx.stroke();
-
-
-/* 날짜 숫자 */
 
 ctx.textAlign=
 "left";
@@ -2758,29 +2683,22 @@ ctx.fillStyle=
 ctx.font=
 "800 28px -apple-system, BlinkMacSystemFont, Arial, sans-serif";
 
-
 ctx.fillText(
 String(day),
 x+16,
 y+28
 );
 
-
 const dateString=
 `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
-
 
 const items=
 byDate[dateString]
 ||
 [];
 
-
 let lineY=
 y+62;
-
-
-/* 근무자 */
 
 items.forEach(
 item=>{
@@ -2794,12 +2712,10 @@ w-24,
 8
 );
 
-
 ctx.fillStyle=
 "#f5f6f7";
 
 ctx.fill();
-
 
 ctx.textAlign=
 "left";
@@ -2807,13 +2723,11 @@ ctx.textAlign=
 ctx.textBaseline=
 "middle";
 
-
 ctx.font=
 "800 18px -apple-system, BlinkMacSystemFont, Arial, sans-serif";
 
 ctx.fillStyle=
 "#111";
-
 
 ctx.fillText(
 item.position||"-",
@@ -2821,12 +2735,10 @@ x+20,
 lineY+16
 );
 
-
 const positionWidth=
 ctx.measureText(
 item.position||"-"
 ).width;
-
 
 ctx.font=
 "400 18px -apple-system, BlinkMacSystemFont, Arial, sans-serif";
@@ -2834,22 +2746,17 @@ ctx.font=
 ctx.fillStyle=
 "#555";
 
-
 ctx.fillText(
 item.name||"",
 x+28+positionWidth,
 lineY+16
 );
 
-
 lineY+=38;
 
 });
 
 }
-
-
-/* PNG 만들기 */
 
 canvas.toBlob(
 async blob=>{
@@ -2864,10 +2771,8 @@ return;
 
 }
 
-
 const filename=
 `${year}-${String(month).padStart(2,"0")}-근무스케줄.png`;
-
 
 const file=
 new File(
@@ -2877,9 +2782,6 @@ filename,
 type:"image/png"
 }
 );
-
-
-/* 아이폰은 공유창 우선 */
 
 try{
 
@@ -2900,6 +2802,727 @@ title:
 
 });
 
+return;
+
+}
+
+}catch(error){
+
+if(
+error.name==="AbortError"
+){
+
+return;
+
+}
+
+}
+
+const url=
+URL.createObjectURL(
+blob
+);
+
+const link=
+document.createElement(
+"a"
+);
+
+link.href=
+url;
+
+link.download=
+filename;
+
+document.body.appendChild(
+link
+);
+
+link.click();
+
+link.remove();
+
+setTimeout(
+()=>{
+
+URL.revokeObjectURL(
+url
+);
+
+},
+1500
+);
+
+},
+
+"image/png"
+
+);
+
+}
+
+
+/* =========================
+   직원별 월간 근무표
+========================= */
+
+function getWeekdayKor(
+dateString
+){
+
+const dayNames=[
+"일",
+"월",
+"화",
+"수",
+"목",
+"금",
+"토"
+];
+
+const d=
+new Date(
+dateString+"T00:00:00"
+);
+
+return(
+dayNames[
+d.getDay()
+]
+);
+
+}
+
+function formatHourShort(
+minutes
+){
+
+const hour=
+minutes/60;
+
+if(
+Number.isInteger(
+hour
+)
+){
+
+return(
+`${hour}h`
+);
+
+}
+
+return(
+`${hour.toFixed(1)}h`
+);
+
+}
+
+function getDefaultReportMonth(){
+
+const reportMonth=
+document.getElementById(
+"reportMonth"
+);
+
+if(!reportMonth){
+return;
+}
+
+if(
+!reportMonth.value
+){
+
+if(
+settings.reportMonth
+){
+
+reportMonth.value=
+settings.reportMonth;
+
+}else if(
+document.getElementById(
+"monthFilter"
+)?.value
+){
+
+reportMonth.value=
+document.getElementById(
+"monthFilter"
+).value;
+
+}else{
+
+const now=
+new Date();
+
+reportMonth.value=
+`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+
+}
+
+}
+
+}
+
+function getEmployeeReportData(){
+
+const monthValue=
+document.getElementById(
+"reportMonth"
+).value;
+
+const employee=
+document.getElementById(
+"reportEmployee"
+).value;
+
+if(
+!monthValue
+||
+!employee
+){
+
+return null;
+
+}
+
+const items=
+works
+
+.filter(
+item=>
+item.name===employee
+&&
+item.date
+&&
+item.date.startsWith(
+monthValue
+)
+)
+
+.sort(
+(a,b)=>
+String(a.date)
+.localeCompare(
+String(b.date)
+)
+);
+
+const totalMinutes=
+items.reduce(
+(sum,item)=>
+sum+
+Number(
+item.total||0
+),
+0
+);
+
+const [year,month]=
+monthValue
+.split("-")
+.map(Number);
+
+return{
+
+monthValue,
+year,
+month,
+employee,
+items,
+totalMinutes
+
+};
+
+}
+
+function renderEmployeeReport(){
+
+getDefaultReportMonth();
+
+const wrap=
+document.getElementById(
+"employeeReportWrap"
+);
+
+const monthEl=
+document.getElementById(
+"reportMonth"
+);
+
+const employeeEl=
+document.getElementById(
+"reportEmployee"
+);
+
+if(
+!monthEl
+||
+!employeeEl
+||
+!wrap
+){
+
+return;
+
+}
+
+saveSettings();
+
+const data=
+getEmployeeReportData();
+
+if(
+!monthEl.value
+||
+!employeeEl.value
+){
+
+wrap.innerHTML=`
+
+<div class="report-placeholder">
+월과 직원을 선택하면 근무표가 보여요.
+</div>
+
+`;
+
+return;
+
+}
+
+if(
+!data
+||
+data.items.length===0
+){
+
+wrap.innerHTML=`
+
+<div class="report-placeholder">
+선택한 월에 저장된 근무기록이 없어요.
+</div>
+
+`;
+
+return;
+
+}
+
+const rowsHtml=
+data.items.map(
+item=>`
+
+<tr>
+
+<td>
+${Number(item.date.split("-")[1])}/${Number(item.date.split("-")[2])}
+</td>
+
+<td>
+${getWeekdayKor(item.date)}
+</td>
+
+<td>
+${item.start} ~ ${item.end}
+(${formatHourShort(Number(item.total||0))})
+</td>
+
+</tr>
+
+`
+)
+.join("");
+
+wrap.innerHTML=`
+
+<div class="report-sheet">
+
+<div class="report-title">
+${data.month}월달 ${escapeHtml(data.employee)} 근무표
+</div>
+
+<table class="report-table">
+
+<thead>
+
+<tr>
+
+<th>날짜</th>
+
+<th>요일</th>
+
+<th>근무시간</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${rowsHtml}
+
+</tbody>
+
+</table>
+
+<div class="report-total-row">
+
+<span>
+총 근무시간
+</span>
+
+<span>
+${formatMinutes(data.totalMinutes)}
+</span>
+
+</div>
+
+<div class="report-actions">
+
+<button
+class="secondary"
+onclick="saveEmployeeReportImage()"
+>
+근무표 이미지 저장
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+function saveEmployeeReportImage(){
+
+const data=
+getEmployeeReportData();
+
+if(
+!data
+||
+data.items.length===0
+){
+
+alert(
+"저장할 근무표가 없어요!"
+);
+
+return;
+
+}
+
+const width=
+1200;
+
+const margin=
+50;
+
+const titleH=
+100;
+
+const headerH=
+60;
+
+const rowH=
+58;
+
+const totalH=
+70;
+
+const tableWidth=
+width-margin*2;
+
+const col1=
+tableWidth*0.24;
+
+const col2=
+tableWidth*0.22;
+
+const col3=
+tableWidth-col1-col2;
+
+const height=
+margin+
+titleH+
+headerH+
+data.items.length*rowH+
+totalH+
+margin;
+
+const canvas=
+document.createElement(
+"canvas"
+);
+
+canvas.width=
+width;
+
+canvas.height=
+height;
+
+const ctx=
+canvas.getContext(
+"2d"
+);
+
+ctx.fillStyle=
+"#ffffff";
+
+ctx.fillRect(
+0,
+0,
+width,
+height
+);
+
+ctx.fillStyle=
+"#111";
+
+ctx.textAlign=
+"center";
+
+ctx.textBaseline=
+"middle";
+
+ctx.font=
+"700 44px -apple-system, BlinkMacSystemFont, Arial, sans-serif";
+
+ctx.fillText(
+`${data.month}월달 ${data.employee} 근무표`,
+width/2,
+margin+30
+);
+
+const startX=
+margin;
+
+let y=
+margin+80;
+
+function drawCell(
+x,
+y,
+w,
+h,
+text,
+bg="#fff",
+font="500 26px -apple-system, BlinkMacSystemFont, Arial, sans-serif"
+){
+
+ctx.fillStyle=
+bg;
+
+ctx.fillRect(
+x,
+y,
+w,
+h
+);
+
+ctx.strokeStyle=
+"#d8d8d8";
+
+ctx.lineWidth=
+1.5;
+
+ctx.strokeRect(
+x,
+y,
+w,
+h
+);
+
+ctx.fillStyle=
+"#222";
+
+ctx.font=
+font;
+
+ctx.textAlign=
+"center";
+
+ctx.textBaseline=
+"middle";
+
+ctx.fillText(
+text,
+x+w/2,
+y+h/2
+);
+
+}
+
+drawCell(
+startX,
+y,
+col1,
+headerH,
+"날짜",
+"#f3efe8",
+"700 26px -apple-system, BlinkMacSystemFont, Arial, sans-serif"
+);
+
+drawCell(
+startX+col1,
+y,
+col2,
+headerH,
+"요일",
+"#f3efe8",
+"700 26px -apple-system, BlinkMacSystemFont, Arial, sans-serif"
+);
+
+drawCell(
+startX+col1+col2,
+y,
+col3,
+headerH,
+"근무시간",
+"#f3efe8",
+"700 26px -apple-system, BlinkMacSystemFont, Arial, sans-serif"
+);
+
+y+=
+headerH;
+
+data.items.forEach(
+item=>{
+
+const dateText=
+`${Number(item.date.split("-")[1])}/${Number(item.date.split("-")[2])}`;
+
+const weekdayText=
+getWeekdayKor(
+item.date
+);
+
+const timeText=
+`${item.start} ~ ${item.end} (${formatHourShort(Number(item.total||0))})`;
+
+drawCell(
+startX,
+y,
+col1,
+rowH,
+dateText
+);
+
+drawCell(
+startX+col1,
+y,
+col2,
+rowH,
+weekdayText
+);
+
+drawCell(
+startX+col1+col2,
+y,
+col3,
+rowH,
+timeText
+);
+
+y+=
+rowH;
+
+});
+
+ctx.fillStyle=
+"#f7f4ee";
+
+ctx.fillRect(
+startX,
+y,
+tableWidth,
+totalH
+);
+
+ctx.strokeStyle=
+"#d8d8d8";
+
+ctx.lineWidth=
+1.5;
+
+ctx.strokeRect(
+startX,
+y,
+tableWidth,
+totalH
+);
+
+ctx.fillStyle=
+"#222";
+
+ctx.textAlign=
+"left";
+
+ctx.font=
+"700 28px -apple-system, BlinkMacSystemFont, Arial, sans-serif";
+
+ctx.fillText(
+"총 근무시간",
+startX+18,
+y+totalH/2
+);
+
+ctx.textAlign=
+"right";
+
+ctx.fillText(
+formatMinutes(
+data.totalMinutes
+),
+startX+tableWidth-18,
+y+totalH/2
+);
+
+canvas.toBlob(
+async blob=>{
+
+if(!blob){
+
+alert(
+"이미지를 만들지 못했어."
+);
+
+return;
+
+}
+
+const fileName=
+`${data.year}-${String(data.month).padStart(2,"0")}-${data.employee}-근무표.png`;
+
+const file=
+new File(
+[blob],
+fileName,
+{
+type:"image/png"
+}
+);
+
+try{
+
+if(
+navigator.canShare
+&&
+navigator.canShare({
+files:[file]
+})
+){
+
+await navigator.share({
+
+files:[file],
+
+title:
+`${data.employee} 근무표`
+
+});
 
 return;
 
@@ -2917,38 +3540,29 @@ return;
 
 }
 
-
-/* 공유가 안 되는 브라우저는 다운로드 */
-
 const url=
 URL.createObjectURL(
 blob
 );
 
-
-const link=
+const a=
 document.createElement(
 "a"
 );
 
-
-link.href=
+a.href=
 url;
 
-link.download=
-filename;
-
+a.download=
+fileName;
 
 document.body.appendChild(
-link
+a
 );
 
+a.click();
 
-link.click();
-
-
-link.remove();
-
+a.remove();
 
 setTimeout(
 ()=>{
@@ -2988,14 +3602,12 @@ function attachAutosave(){
 const el=
 document.getElementById(id);
 
-
 el.addEventListener(
 "change",
 saveSettings
 );
 
 });
-
 
 document
 .getElementById(
@@ -3005,7 +3617,6 @@ document
 "change",
 buildCalendar
 );
-
 
 document
 .getElementById(
@@ -3022,7 +3633,6 @@ renderWorks();
 }
 );
 
-
 document
 .getElementById(
 "scheduleMonth"
@@ -3038,6 +3648,36 @@ renderScheduleCalendar();
 }
 );
 
+document
+.getElementById(
+"reportMonth"
+)
+.addEventListener(
+"change",
+()=>{
+
+saveSettings();
+
+renderEmployeeReport();
+
+}
+);
+
+document
+.getElementById(
+"reportEmployee"
+)
+.addEventListener(
+"change",
+()=>{
+
+saveSettings();
+
+renderEmployeeReport();
+
+}
+);
+
 }
 
 
@@ -3049,7 +3689,6 @@ renderEmployees();
 
 restoreSettings();
 
-
 if(
 document.getElementById(
 "monthPicker"
@@ -3060,12 +3699,15 @@ buildCalendar();
 
 }
 
-
 renderWorks();
 
 getDefaultScheduleMonth();
 
 renderScheduleCalendar();
+
+getDefaultReportMonth();
+
+renderEmployeeReport();
 
 attachAutosave();
 
