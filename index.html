@@ -67,16 +67,21 @@ button{border:0;background:#111;color:#fff;font-weight:800;margin-top:12px}
 .totalHead .saveImg{width:auto;margin:0;padding:9px 12px}
 .totalControls{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-top:10px}
 .totalControls button{width:auto;margin:0;padding:10px 14px}
-.totalPerson{margin-top:12px;border:1px solid #e9e9e9;border-radius:13px;overflow:hidden;background:#fff}
-.totalPersonHead{padding:12px;background:#f7f7f8;display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-.totalPersonHead b{font-size:15px}
-.totalStats{font-size:12px;color:#666;line-height:1.5;text-align:right}
+.totalPerson{margin-top:18px;background:#fff;border:1px solid #e5e1da;border-radius:14px;padding:18px 14px 14px}
+.totalPersonTitle{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
+.totalPersonTitle h3{margin:0;font-size:21px;line-height:1.25;text-align:center;flex:1}
+.personSave{width:auto!important;margin:0!important;padding:8px 11px!important;font-size:12px!important;background:#fff!important;color:#222!important;border:1px solid #d8d8d8!important}
 .tableWrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-.workTable{width:100%;border-collapse:collapse;min-width:620px;font-size:12px}
-.workTable th,.workTable td{padding:8px 7px;border-top:1px solid #eee;text-align:center;white-space:nowrap}
-.workTable th{background:#fcfcfc;color:#666;font-weight:800}
-.workTable td:first-child,.workTable th:first-child{text-align:left;padding-left:12px}
+.workTable{width:100%;border-collapse:collapse;min-width:0;font-size:13px;border:1px solid #d9d6d0}
+.workTable th,.workTable td{padding:10px 8px;border:1px solid #dedbd5;text-align:center;white-space:nowrap}
+.workTable th{background:#f3efe9;color:#333;font-weight:800}
+.workTable th:nth-child(1){width:24%}.workTable th:nth-child(2){width:22%}.workTable th:nth-child(3){width:54%}
+.workTable td.workDetail{text-align:right;padding-right:12px}
+.workTable tfoot td{background:#f3efe9;font-weight:800}
+.workTable tfoot td:first-child{text-align:left;padding-left:12px}
+.workTable tfoot td:last-child{text-align:right;padding-right:12px}
 .eduTag{font-weight:800}
+.eduSub{display:block;font-size:11px;color:#8a6d3b;font-weight:800;margin-bottom:2px}
 
 @media(max-width:520px){
   .modalInner{padding:10px}
@@ -158,7 +163,7 @@ button{border:0;background:#111;color:#fff;font-weight:800;margin-top:12px}
 <div class="totalHead">
 <div>
 <h2>직원 총 근무표</h2>
-<div class="note">직원별 날짜·요일·출퇴근시간·근무시간과 교육시간을 한눈에 확인해요.</div>
+<div class="note">사진처럼 직원별 월간 근무표로 보고, 교육 일차와 교육시간도 함께 확인해요.</div>
 </div>
 <button class="saveImg" onclick="saveTotalWorkImage()">사진 저장</button>
 </div>
@@ -657,38 +662,59 @@ function totalWorkData(){
 function renderTotalWorkTable(){
  const box=document.getElementById("totalWorkTable");
  if(!box)return;
- const {groups}=totalWorkData();
+ const {month,groups}=totalWorkData();
  const names=Object.keys(groups);
  if(!names.length){
   box.innerHTML='<div class="empty">표시할 근무기록이 없어요.</div>';
   return;
  }
+ const monthLabel=month?`${Number(month.slice(5,7))}월달`:"전체";
  box.innerHTML=names.map(name=>{
   const arr=groups[name];
   const total=arr.reduce((a,x)=>a+Number(x.total||0),0);
   const edu=educationSummary(arr);
-  const uniqueDays=new Set(arr.map(x=>x.date)).size;
-  const rows=arr.map(x=>`
-   <tr>
-    <td>${esc(dateText(x.date))} (${dayName(x.date)})</td>
-    <td class="${x.position==='교육'?'eduTag':''}">${esc(displayPosition(x))}</td>
-    <td>${esc(x.start||'-')} ~ ${esc(x.end||'-')}</td>
-    <td>${esc(timeText(Number(x.total||0)))}</td>
-   </tr>`).join("");
+  const rows=arr.map(x=>{
+   const pos=displayPosition(x);
+   const detail=`${x.start||'-'} ~ ${x.end||'-'} (${shortTimeText(Number(x.total||0))})`;
+   return `<tr>
+    <td>${esc(shortDateText(x.date))}</td>
+    <td>${esc(dayName(x.date))}</td>
+    <td class="workDetail">${x.position==='교육'?`<span class="eduSub">${esc(pos)}</span>`:(x.position?`<span class="eduSub" style="color:#666">${esc(pos)}</span>`:"")}${esc(detail)}</td>
+   </tr>`;
+  }).join("");
+  const safeName=encodeURIComponent(name);
   return `
   <div class="totalPerson">
-   <div class="totalPersonHead">
-    <b>${esc(name)}</b>
-    <div class="totalStats">근무 ${uniqueDays}일 · 총 ${timeText(total)}${edu.days?`<br>교육 ${edu.days}일 · ${timeText(edu.total)}`:""}</div>
+   <div class="totalPersonTitle">
+    <div style="width:72px"></div>
+    <h3>${esc(monthLabel)} ${esc(name)} 근무표</h3>
+    <button class="personSave" onclick="savePersonWorkImage(decodeURIComponent('${safeName}'))">사진 저장</button>
    </div>
    <div class="tableWrap">
     <table class="workTable">
-     <thead><tr><th>날짜/요일</th><th>포지션</th><th>출퇴근</th><th>근무시간</th></tr></thead>
+     <thead><tr><th>날짜</th><th>요일</th><th>근무시간</th></tr></thead>
      <tbody>${rows}</tbody>
+     <tfoot>
+      <tr><td colspan="2">총 근무시간</td><td>${esc(timeText(total))}</td></tr>
+      ${edu.days?`<tr><td colspan="2">교육 ${edu.days}일</td><td>${esc(timeText(edu.total))}</td></tr>`:""}
+     </tfoot>
     </table>
    </div>
   </div>`;
  }).join("");
+}
+
+function shortDateText(dateStr){
+ const [y,m,d]=dateStr.split("-");
+ return `${Number(m)}/${Number(d)}`;
+}
+
+function shortTimeText(n){
+ const mins=Math.round(Number(n||0)*60);
+ const h=Math.floor(mins/60), m=mins%60;
+ if(m===0)return `${h}h`;
+ if(h===0)return `${m}m`;
+ return `${h}h ${m}m`;
 }
 
 function clearTotalMonth(){
@@ -696,6 +722,66 @@ function clearTotalMonth(){
  if(el)el.value="";
  saveSettings();
  renderTotalWorkTable();
+}
+
+function savePersonWorkImage(name){
+ const {month,groups}=totalWorkData();
+ const arr=groups[name]||[];
+ if(!arr.length){alert("저장할 근무기록이 없어!");return;}
+ const total=arr.reduce((a,x)=>a+Number(x.total||0),0);
+ const edu=educationSummary(arr);
+ const W=1200, margin=50, titleH=120, headH=58, rowH=58, footRows=edu.days?2:1;
+ const H=margin+titleH+headH+(arr.length*rowH)+(footRows*rowH)+margin;
+ const canvas=document.createElement("canvas");
+ canvas.width=W;canvas.height=H;
+ const ctx=canvas.getContext("2d");
+ ctx.fillStyle="#ffffff";ctx.fillRect(0,0,W,H);
+ const monthLabel=month?`${Number(month.slice(5,7))}월달`:"전체";
+ ctx.fillStyle="#111";ctx.textAlign="center";ctx.font='700 42px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+ ctx.fillText(`${monthLabel} ${name} 근무표`,W/2,95);
+ const x=margin, innerW=W-margin*2, cw=[250,230,620];
+ let y=margin+titleH;
+ ctx.textAlign="center";
+ ctx.fillStyle="#f3efe9";ctx.fillRect(x,y,innerW,headH);
+ ctx.strokeStyle="#d9d6d0";ctx.lineWidth=1;
+ const heads=["날짜","요일","근무시간"];
+ let cx=x;
+ ctx.font='700 24px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';ctx.fillStyle="#222";
+ heads.forEach((h,i)=>{ctx.strokeRect(cx,y,cw[i],headH);ctx.fillText(h,cx+cw[i]/2,y+38);cx+=cw[i];});
+ y+=headH;
+ arr.forEach(w=>{
+  const vals=[shortDateText(w.date),dayName(w.date)];
+  cx=x;ctx.font='400 23px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';ctx.fillStyle="#222";
+  vals.forEach((v,i)=>{ctx.strokeRect(cx,y,cw[i],rowH);ctx.fillText(v,cx+cw[i]/2,y+37);cx+=cw[i];});
+  ctx.strokeRect(cx,y,cw[2],rowH);
+  const pos=displayPosition(w);
+  const detail=`${w.start||'-'} ~ ${w.end||'-'} (${shortTimeText(Number(w.total||0))})`;
+  ctx.textAlign="right";
+  if(pos){ctx.font='700 17px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';ctx.fillStyle=w.position==='교육'?"#7a5b28":"#666";ctx.fillText(pos,cx+cw[2]-18,y+23);}
+  ctx.font='400 23px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';ctx.fillStyle="#222";ctx.fillText(detail,cx+cw[2]-18,y+47);
+  ctx.textAlign="center";y+=rowH;
+ });
+ function footerRow(label,value){
+  ctx.fillStyle="#f3efe9";ctx.fillRect(x,y,innerW,rowH);
+  ctx.strokeStyle="#d9d6d0";ctx.strokeRect(x,y,cw[0]+cw[1],rowH);ctx.strokeRect(x+cw[0]+cw[1],y,cw[2],rowH);
+  ctx.fillStyle="#222";ctx.font='700 24px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+  ctx.textAlign="left";ctx.fillText(label,x+18,y+38);
+  ctx.textAlign="right";ctx.fillText(value,x+innerW-18,y+38);
+  ctx.textAlign="center";y+=rowH;
+ }
+ footerRow("총 근무시간",timeText(total));
+ if(edu.days)footerRow(`교육 ${edu.days}일`,timeText(edu.total));
+ const filename=`${month||"전체"}_${name}_근무표.png`;
+ canvas.toBlob(async blob=>{
+  if(!blob)return;
+  try{
+   const file=new File([blob],filename,{type:"image/png"});
+   if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
+    await navigator.share({files:[file],title:`${name} 근무표`});return;
+   }
+  }catch(e){if(e&&e.name==="AbortError")return;}
+  const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+ },"image/png");
 }
 
 function saveTotalWorkImage(){
