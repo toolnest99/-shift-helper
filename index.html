@@ -361,16 +361,13 @@ function toggleDay(date,d){
 }
 
 function tempEducationDay(x){
- // 교육일차는 월과 상관없이 해당 직원의 전체 교육기록 기준으로 계속 누적
  if(!x||x.position!=="교육")return null;
- const savedDates=works
-  .filter(w=>w.name===x.name&&w.position==="교육")
-  .map(w=>w.date);
- const previewDates=temp
-  .filter(w=>w.name===x.name&&w.position==="교육")
-  .map(w=>w.date);
- const dates=[...new Set([...savedDates,...previewDates])]
-  .sort((a,b)=>a.localeCompare(b));
+ let dates=[...new Set(
+  works
+   .filter(w=>w.name===x.name&&w.position==="교육")
+   .map(w=>w.date)
+   .concat(temp.filter(w=>w.name===x.name&&w.position==="교육").map(w=>w.date))
+ )].sort();
  return dates.indexOf(x.date)+1;
 }
 
@@ -490,14 +487,13 @@ function delWork(id){
 }
 
 function educationDateMap(name){
- // 월 필터를 적용하지 않음: 8월 4일차 다음은 9월 5일차로 이어짐
- const dates=[...new Set(
+ let dates=[...new Set(
   works
    .filter(x=>x.name===name&&x.position==="교육")
    .map(x=>x.date)
- )].sort((a,b)=>a.localeCompare(b));
+ )].sort();
 
- const map={};
+ let map={};
  dates.forEach((d,i)=>map[d]=i+1);
  return map;
 }
@@ -514,9 +510,25 @@ function displayPosition(x){
 }
 
 function educationSummary(arr){
- let edu=arr.filter(x=>x.position==="교육");
- let days=new Set(edu.map(x=>x.date)).size;
- let total=edu.reduce((a,x)=>a+Number(x.total||0),0);
+ // 근무표는 선택한 월의 기록만 합산하지만,
+ // 교육 일차/교육 누적시간은 월이 바뀌어도 이어서 계산해요.
+ if(!arr||!arr.length)return {days:0,total:0};
+
+ const name=arr[0].name;
+ const lastDate=arr
+  .map(x=>x.date)
+  .filter(Boolean)
+  .sort()
+  .at(-1);
+
+ const edu=works.filter(x=>
+  x.name===name &&
+  x.position==="교육" &&
+  (!lastDate || x.date<=lastDate)
+ );
+
+ const days=new Set(edu.map(x=>x.date)).size;
+ const total=edu.reduce((a,x)=>a+Number(x.total||0),0);
  return {days,total};
 }
 
@@ -656,7 +668,6 @@ function dayName(dateStr){
 function totalWorkData(){
  const m=(document.getElementById("totalMonth")||{}).value||"";
  const selectedName=(document.getElementById("emp")||{}).value||"";
- // 근무시간/근무기록은 선택한 월 기준으로 바뀜
  let rows=m?works.filter(x=>x.date.startsWith(m)):works.slice();
 
  // 위에서 선택한 직원의 근무표만 표시
