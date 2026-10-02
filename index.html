@@ -162,8 +162,8 @@ button{border:0;background:#111;color:#fff;font-weight:800;margin-top:12px}
 <div class="card" id="totalWorkCard">
 <div class="totalHead">
 <div>
-<h2>직원 총 근무표</h2>
-<div class="note">사진처럼 직원별 월간 근무표로 보고, 교육 일차와 교육시간도 함께 확인해요.</div>
+<h2>직원 근무표</h2>
+<div class="note">위에서 선택한 직원의 월간 근무표만 보여요. 교육 일차와 교육시간도 함께 확인해요.</div>
 </div>
 <button class="saveImg" onclick="saveTotalWorkImage()">사진 저장</button>
 </div>
@@ -255,6 +255,7 @@ function addEmp(){
  newEmp.value="";
  saveData();
  renderEmp();
+ renderTotalWorkTable();
 }
 
 function delEmp(n){
@@ -650,22 +651,35 @@ function dayName(dateStr){
 
 function totalWorkData(){
  const m=(document.getElementById("totalMonth")||{}).value||"";
- const rows=m?works.filter(x=>x.date.startsWith(m)):works.slice();
+ const selectedName=(document.getElementById("emp")||{}).value||"";
+ let rows=m?works.filter(x=>x.date.startsWith(m)):works.slice();
+
+ // 위에서 선택한 직원의 근무표만 표시
+ if(selectedName){
+  rows=rows.filter(x=>x.name===selectedName);
+ }else{
+  rows=[];
+ }
+
  const g={};
  rows.sort((a,b)=>a.date.localeCompare(b.date)).forEach(x=>{
   if(!g[x.name])g[x.name]=[];
   g[x.name].push(x);
  });
- return {month:m,groups:g};
+ return {month:m,groups:g,selectedName};
 }
 
 function renderTotalWorkTable(){
  const box=document.getElementById("totalWorkTable");
  if(!box)return;
- const {month,groups}=totalWorkData();
+ const {month,groups,selectedName}=totalWorkData();
  const names=Object.keys(groups);
+ if(!selectedName){
+  box.innerHTML='<div class="empty">위에서 직원을 선택하면 해당 직원 근무표만 보여요.</div>';
+  return;
+ }
  if(!names.length){
-  box.innerHTML='<div class="empty">표시할 근무기록이 없어요.</div>';
+  box.innerHTML=`<div class="empty">${esc(selectedName)}의 표시할 근무기록이 없어요.</div>`;
   return;
  }
  const monthLabel=month?`${Number(month.slice(5,7))}월달`:"전체";
@@ -1271,10 +1285,16 @@ if(month.value){
  buildCal();
 }
 
-["emp","pos","start","end"].forEach(id=>
+["pos","start","end"].forEach(id=>
  document.getElementById(id)
  .addEventListener("change",saveSettings)
 );
+
+// 직원 선택을 바꾸면 아래 근무표도 바로 해당 직원으로 변경
+emp.addEventListener("change",()=>{
+ saveSettings();
+ renderTotalWorkTable();
+});
 
 month.addEventListener(
  "change",
